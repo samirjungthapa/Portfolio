@@ -58,6 +58,29 @@ const projectsData = [
       "Structured contact form and custom layout elements",
     ],
     status: "Completed",
+    mockupTitle: "samirjungthapa.dev",
+    mockupType: "web",
+  },
+  {
+    id: 4,
+    title: "ThapaMart E-Commerce",
+    category: "Web App",
+    description:
+      "A full-stack e-commerce web application with a React/Redux frontend styled with Tailwind CSS, and a Node.js/Express backend. Features secure JWT authentication, dynamic product filtering, cart, wishlist, checkout flow, and a dedicated admin dashboard.",
+    techStack: ["React", "Redux Toolkit", "Node.js", "Express", "Tailwind CSS", "JWT"],
+    githubUrl: "https://github.com/samirjungthapa/ThapaMart-",
+    liveUrl: null,
+    icon: "fa-solid fa-store",
+    accentColor: "#f43f5e",
+    features: [
+      "Secure JWT user authentication & authorization",
+      "Dynamic product catalog and category filters",
+      "Interactive cart, wishlist, and comparison features",
+      "Comprehensive admin dashboard for product management",
+    ],
+    status: "Completed",
+    mockupTitle: "thapamart.local",
+    mockupType: "store",
   },
 ];
 
@@ -114,14 +137,14 @@ const Projects = () => {
                     <span className="mockup-dot red"></span>
                     <span className="mockup-dot yellow"></span>
                     <span className="mockup-dot green"></span>
-                    <span className="mockup-title-bar">GymManagementSystem.jar</span>
+                    <span className="mockup-title-bar">{proj.mockupTitle || "GymManagementSystem.jar"}</span>
                   </div>
                 ) : proj.category === "Web App" ? (
                   <div className="mockup-desktop-header">
                     <span className="mockup-dot red"></span>
                     <span className="mockup-dot yellow"></span>
                     <span className="mockup-dot green"></span>
-                    <span className="mockup-title-bar">samirjungthapa.dev</span>
+                    <span className="mockup-title-bar">{proj.mockupTitle || "localhost"}</span>
                   </div>
                 ) : (
                   <div className="mockup-terminal">
@@ -151,6 +174,13 @@ const Projects = () => {
                     </div>
                     <div className="terminal-output" style={{ color: '#e2c999' }}>
                       Stock Alert: 2 products restocking needed.
+                    </div>
+                  </div>
+                ) : proj.mockupType === "store" ? (
+                  <div className="terminal-window" style={{ background: '#0a0508', borderBottom: '1px solid rgba(255,255,255,0.03)', color: '#f43f5e', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '140px' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <i className="fa-solid fa-store" style={{ fontSize: '2.5rem', marginBottom: '8px', color: '#f43f5e', filter: 'drop-shadow(0 0 10px rgba(244, 63, 94, 0.4))' }}></i>
+                      <div style={{ fontSize: '0.75rem', fontFamily: 'Courier New', color: '#64748b' }}>localhost:5173 - active</div>
                     </div>
                   </div>
                 ) : proj.category === "Web App" ? (
