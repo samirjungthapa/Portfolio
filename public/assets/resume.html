@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Samir Jung Thapa — Resume</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Times+New+Roman&family=Calibri:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 10.5pt; }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      color: #111;
+      background: #e8e8e8;
+      line-height: 1.5;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* Print bar */
+    .print-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 50px;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 1000;
+    }
+    .print-bar p { color: #94a3b8; font-size: 0.82rem; }
+    .print-btn {
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      padding: 7px 20px;
+      border-radius: 5px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .print-btn:hover { background: #2563eb; }
+
+    /* Page wrapper */
+    .page-wrapper {
+      margin-top: 50px;
+      padding: 28px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Resume sheet */
+    .resume {
+      background: #fff;
+      width: 210mm;
+      min-height: 297mm;
+      padding: 28mm 22mm 20mm 22mm;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.18);
+    }
+
+    /* ---- HEADER ---- */
+    .cv-header {
+      text-align: center;
+      margin-bottom: 14px;
+    }
+    .cv-name {
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: #0f172a;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .cv-contact-line {
+      font-size: 0.88rem;
+      color: #334155;
+      margin-bottom: 3px;
+    }
+    .cv-contact-line a {
+      color: #1d4ed8;
+      text-decoration: none;
+    }
+    .cv-contact-line a:hover { text-decoration: underline; }
+    .cv-contact-line .sep {
+      margin: 0 6px;
+      color: #94a3b8;
+    }
+
+    /* ---- DIVIDER ---- */
+    .cv-divider {
+      border: none;
+      border-top: 2px solid #0f172a;
+      margin: 10px 0 0 0;
+    }
+    .cv-divider-thin {
+      border: none;
+      border-top: 1px solid #cbd5e1;
+      margin: 3px 0 10px 0;
+    }
+
+    /* ---- SECTION ---- */
+    .cv-section {
+      margin-bottom: 16px;
+    }
+    .cv-section-title {
+      font-size: 10.5pt;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #0f172a;
+      margin-bottom: 0;
+      padding-bottom: 2px;
+    }
+
+    /* ---- PROFESSIONAL SUMMARY ---- */
+    .cv-summary {
+      font-size: 0.88rem;
+      color: #374151;
+      line-height: 1.65;
+      margin-top: 6px;
+    }
+
+    /* ---- EDUCATION ---- */
+    .cv-entry {
+      margin-top: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .cv-entry-left { flex: 1; }
+    .cv-entry-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .cv-entry-org {
+      font-size: 9.5pt;
+      color: #374151;
+      margin-top: 1px;
+    }
+    .cv-entry-date {
+      font-size: 9pt;
+      color: #374151;
+      font-weight: 600;
+      white-space: nowrap;
+      flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    /* ---- SKILLS ---- */
+    .cv-skills-block {
+      margin-top: 7px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cv-skill-row {
+      font-size: 9.5pt;
+      color: #1e293b;
+      line-height: 1.5;
+    }
+    .cv-skill-row strong {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    /* ---- BULLET LISTS ---- */
+    .cv-bullet-list {
+      list-style: none;
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .cv-bullet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      font-size: 9.5pt;
+      color: #374151;
+      line-height: 1.55;
+    }
+    .cv-bullet-list li::before {
+      content: "•";
+      font-size: 11pt;
+      color: #0f172a;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    /* ---- PROJECTS ---- */
+    .cv-project {
+      margin-top: 9px;
+    }
+    .cv-project-title {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .cv-project + .cv-project {
+      margin-top: 10px;
+    }
+
+    /* ---- EXPERIENCE ENTRY ---- */
+    .cv-exp-entry {
+      margin-top: 8px;
+    }
+
+    /* ---- PRINT ---- */
+    @media print {
+      body { background: #fff; }
+      .print-bar { display: none; }
+      .page-wrapper { margin-top: 0; padding: 0; }
+      .resume {
+        box-shadow: none;
+        width: 100%;
+        min-height: 0;
+        padding: 14mm 16mm 14mm 16mm;
+      }
+      @page {
+        size: A4;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Print bar -->
+  <div class="print-bar">
+    <p>💡 Use "Save as PDF" in the print dialog to download.</p>
+    <button class="print-btn" onclick="window.print()">⬇ Download as PDF</button>
+  </div>
+
+  <div class="page-wrapper">
+    <div class="resume">
+
+      <!-- ===== HEADER ===== -->
+      <div class="cv-header">
+        <div class="cv-name">Samir Jung Thapa</div>
+        <div class="cv-contact-line">
+          +977 9822434711
+          <span class="sep">|</span>
+          <a href="mailto:Samirjungthapa7@gmail.com">Samirjungthapa7@gmail.com</a>
+          <span class="sep">|</span>
+          SundarHaraicha-5, Morang, Nepal
+        </div>
+        <div class="cv-contact-line">
+          <a href="https://www.linkedin.com/in/samir-jung-thapa-21aaa83b6" target="_blank">linkedin.com/in/samir-jung-thapa</a>
+          <span class="sep">|</span>
+          <a href="https://github.com/SamirJungThapa" target="_blank">github.com/SamirJungThapa</a>
+        </div>
+      </div>
+
+      <hr class="cv-divider" />
+      <hr class="cv-divider-thin" />
+
+      <!-- ===== PROFESSIONAL SUMMARY ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Professional Summary</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+        <p class="cv-summary">
+          Passionate Frontend Developer and B.Sc. (Hons) Computing student at Itahari International College, Nepal. Skilled in crafting modern, responsive, and high-performance web experiences using React, JavaScript, and advanced CSS. Operating as a freelance developer since 2024, delivering custom web interfaces that combine clean code with beautiful UI/UX. Committed to continuous learning and building impactful digital solutions.
+        </p>
+      </div>
+
+      <!-- ===== EDUCATION ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Education</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+
+        <div class="cv-entry">
+          <div class="cv-entry-left">
+            <div class="cv-entry-title">B.Sc. (Hons) Computing</div>
+            <div class="cv-entry-org">Itahari International College — Itahari, Nepal</div>
+          </div>
+          <div class="cv-entry-date">2024 – 2026</div>
+        </div>
+
+        <div class="cv-entry">
+          <div class="cv-entry-left">
+            <div class="cv-entry-title">+2 (Computer Science)</div>
+            <div class="cv-entry-org">Koshi Saint James College — Morang, Nepal</div>
+          </div>
+          <div class="cv-entry-date">2021 – 2023</div>
+        </div>
+
+        <div class="cv-entry">
+          <div class="cv-entry-left">
+            <div class="cv-entry-title">Secondary Education Examination (SEE)</div>
+            <div class="cv-entry-org">Koshi Saint James Secondary School — Morang, Nepal</div>
+          </div>
+          <div class="cv-entry-date">Completed 2021</div>
+        </div>
+      </div>
+
+      <!-- ===== SKILLS ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Skills</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+        <div class="cv-skills-block">
+          <div class="cv-skill-row">
+            <strong>Technical Skills:</strong> React.js, JavaScript (ES6+), HTML5, CSS3, Python, Java, Node.js, MongoDB, MySQL
+          </div>
+          <div class="cv-skill-row">
+            <strong>Tools &amp; Technologies:</strong> Git, GitHub, Docker, Linux, Figma, Vercel, Vite, VS Code
+          </div>
+          <div class="cv-skill-row">
+            <strong>Concepts:</strong> Responsive Web Design, REST APIs, Object-Oriented Programming, Data Structures &amp; Algorithms, Software Engineering, Database Management
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== EXPERIENCE ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Experience</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+
+        <div class="cv-exp-entry">
+          <div class="cv-entry">
+            <div class="cv-entry-left">
+              <div class="cv-entry-title">Freelance Frontend Developer</div>
+              <div class="cv-entry-org">Self-Employed — Remote</div>
+            </div>
+            <div class="cv-entry-date">2024 – Present</div>
+          </div>
+          <ul class="cv-bullet-list">
+            <li>Developing responsive frontend websites and web applications for businesses and individual clients.</li>
+            <li>Building modern user interfaces with smooth interactive animations and micro-interactions.</li>
+            <li>Creating high-performance web experiences, optimizing code for speed and SEO best practices.</li>
+            <li>Implementing fully responsive layout grids for desktop, tablet, and mobile devices.</li>
+            <li>Working with modern frontend technologies including HTML5, CSS3, JavaScript, and React.js.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- ===== PROJECTS ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Projects</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+
+        <div class="cv-project">
+          <div class="cv-project-title">Gym Management System</div>
+          <ul class="cv-bullet-list">
+            <li>Full-featured Java Swing desktop application for managing gym operations including member registration and fee tracking.</li>
+            <li>Technologies used: Java, Java Swing, OOP, File I/O, GUI Design.</li>
+            <li>Key features: Member profile management, subscription tracking, workout scheduling, auto-generated reports.</li>
+          </ul>
+        </div>
+
+        <div class="cv-project">
+          <div class="cv-project-title">WeCare Skin Care System</div>
+          <ul class="cv-bullet-list">
+            <li>Python-based CLI inventory management system for a skin care business with invoice generation and promotional logic.</li>
+            <li>Technologies used: Python, File I/O, OOP, CLI, Invoice Generation.</li>
+            <li>Key features: Inventory management, buy-3-get-1-free promo, supplier restocking, auto-timestamped invoices.</li>
+          </ul>
+        </div>
+
+        <div class="cv-project">
+          <div class="cv-project-title">Personal Portfolio Website</div>
+          <ul class="cv-bullet-list">
+            <li>Modern premium portfolio website featuring glassmorphism design, scroll-triggered animations, and bento-grid layouts.</li>
+            <li>Technologies used: React.js, JavaScript, CSS3, Vite, Web3Forms API.</li>
+            <li>Key features: Typing hero animation, filterable projects, working contact form, fully responsive design.</li>
+          </ul>
+        </div>
+      </div>
+
+
+      <!-- ===== LANGUAGES ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Languages</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+        <ul class="cv-bullet-list">
+          <li>Nepali — Native</li>
+          <li>English — Professional Proficiency</li>
+          <li>Hindi — Conversational</li>
+        </ul>
+      </div>
+
+      <!-- ===== INTERESTS ===== -->
+      <div class="cv-section">
+        <div class="cv-section-title">Interests</div>
+        <hr class="cv-divider" />
+        <hr class="cv-divider-thin" />
+        <ul class="cv-bullet-list">
+          <li>Nature &amp; Hiking</li>
+          <li>Coding &amp; Open Source</li>
+          <li>Continuous Learning &amp; Technology</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    if (new URLSearchParams(window.location.search).get('print') === '1') {
+      window.addEventListener('load', () => setTimeout(() => window.print(), 500));
+    }
+  </script>
+</body>
+</html>
