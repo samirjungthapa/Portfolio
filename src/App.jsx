@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import PageTransition from './components/PageTransition';
 
 import About from './components/About';
 import Education from './components/Education';
@@ -82,16 +83,43 @@ function App() {
       }
     };
 
-    // 3. Click event listener for hash links to reveal sections instantly
+    // 3. Click event listener for hash links to trigger premium page transition
     const handleAnchorClick = (e) => {
       const link = e.target.closest('a');
       const href = link?.getAttribute('href');
       if (href && href.startsWith('#')) {
         const id = href.substring(1);
         const targetEl = document.getElementById(id);
-        if (targetEl && targetEl.classList.contains('scroll-reveal')) {
-          // Immediately make active so it is fully visible during and after scroll
-          targetEl.classList.add('active');
+        if (targetEl) {
+          e.preventDefault();
+          
+          // Dispatch page transition event to show overlay
+          window.dispatchEvent(new CustomEvent('page-transition-trigger'));
+          
+          // Wait for overlay to cover screen, then jump scroll instantly
+          setTimeout(() => {
+            if (targetEl.classList.contains('scroll-reveal')) {
+              targetEl.classList.add('active');
+            }
+            
+            // Instantly reveal all child animation elements
+            const innerElements = targetEl.querySelectorAll('.reveal-item, .reveal-left, .reveal-right');
+            innerElements.forEach((el) => {
+              el.style.opacity = '1';
+              el.style.transform = 'translate(0) rotate(0) scale(1)';
+            });
+
+            const offset = 80; // Sticky header offset
+            const bodyRect = document.body.getBoundingClientRect().top;
+            const elementRect = targetEl.getBoundingClientRect().top;
+            const elementPosition = elementRect - bodyRect;
+            const offsetPosition = elementPosition - offset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'auto' // Instant jump while overlay is fully opaque
+            });
+          }, 350);
         }
       }
     };
@@ -111,14 +139,20 @@ function App() {
 
   const scrollToTop = (e) => {
     e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
+    window.dispatchEvent(new CustomEvent('page-transition-trigger'));
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'auto'
+      });
+    }, 350);
   };
 
   return (
     <>
+      {/* Premium Screen Wipe Page Transition */}
+      <PageTransition />
+
       {/* Premium Custom Cursor Follower */}
       {!isMobile && (
         <div 

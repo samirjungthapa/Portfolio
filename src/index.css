@@ -4086,3 +4086,86 @@ button, input, textarea, select {
     }
 }
 
+/* ==========================================================================
+   PREMIUM SCREEN WIPE PAGE TRANSITION OVERLAY
+   ========================================================================== */
+
+.page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+}
+
+.wipe-bar {
+    width: 100%;
+    height: 33.34vh;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid rgba(226, 201, 153, 0.03);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.wipe-bar-2 {
+    transition-delay: 0.06s;
+}
+
+.wipe-bar-3 {
+    transition-delay: 0.12s;
+}
+
+.page-transition-overlay.active .wipe-bar {
+    transform: scaleX(1);
+    pointer-events: auto;
+}
+
+.page-transition-overlay:not(.active) .wipe-bar {
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 0.4s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.page-transition-overlay:not(.active) .wipe-bar-1 {
+    transition-delay: 0.12s;
+}
+.page-transition-overlay:not(.active) .wipe-bar-2 {
+    transition-delay: 0.06s;
+}
+.page-transition-overlay:not(.active) .wipe-bar-3 {
+    transition-delay: 0s;
+}
+
+.wipe-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 100000;
+}
+
+.wipe-logo span {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.page-transition-overlay.active .wipe-logo {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    transition-delay: 0.2s;
+}
+
+
