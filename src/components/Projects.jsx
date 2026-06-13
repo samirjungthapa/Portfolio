@@ -40,9 +40,28 @@ const projectsData = [
     ],
     status: "Completed",
   },
+  {
+    id: 3,
+    title: "Developer Portfolio",
+    category: "Web App",
+    description:
+      "My personal developer portfolio website. Built using React, JavaScript, Vite, HTML, and custom CSS. Featuring a responsive glassmorphism aesthetic, interactive projects filter, certifications display, and optimized metadata for SEO.",
+    techStack: ["React", "JavaScript", "Vite", "HTML5", "CSS3", "Git"],
+    githubUrl: "https://github.com/samirjungthapa/Portfolio",
+    liveUrl: "https://samirjungthapa.dev",
+    icon: "fa-solid fa-laptop-code",
+    accentColor: "#5eead4",
+    features: [
+      "Fully responsive glassmorphism design",
+      "Dynamic filtering for projects and skills",
+      "Optimized SEO metadata and Open Graph tags",
+      "Structured contact form and custom layout elements",
+    ],
+    status: "Completed",
+  },
 ];
 
-const categoryFilters = ["All", "Desktop App", "CLI App"];
+const categoryFilters = ["All", "Desktop App", "CLI App", "Web App"];
 
 const Projects = () => {
   const [activeFilter, setActiveFilter] = useState("All");
@@ -97,6 +116,13 @@ const Projects = () => {
                     <span className="mockup-dot green"></span>
                     <span className="mockup-title-bar">GymManagementSystem.jar</span>
                   </div>
+                ) : proj.category === "Web App" ? (
+                  <div className="mockup-desktop-header">
+                    <span className="mockup-dot red"></span>
+                    <span className="mockup-dot yellow"></span>
+                    <span className="mockup-dot green"></span>
+                    <span className="mockup-title-bar">samirjungthapa.dev</span>
+                  </div>
                 ) : (
                   <div className="mockup-terminal">
                     <span className="mockup-dot red"></span>
@@ -125,6 +151,13 @@ const Projects = () => {
                     </div>
                     <div className="terminal-output" style={{ color: '#e2c999' }}>
                       Stock Alert: 2 products restocking needed.
+                    </div>
+                  </div>
+                ) : proj.category === "Web App" ? (
+                  <div className="terminal-window" style={{ background: '#070a13', borderBottom: '1px solid rgba(255,255,255,0.03)', color: '#5eead4', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '140px' }}>
+                    <div style={{ textAlign: 'center' }}>
+                      <i className="fa-solid fa-globe" style={{ fontSize: '2.5rem', marginBottom: '8px', color: '#5eead4', filter: 'drop-shadow(0 0 10px rgba(94, 234, 212, 0.4))' }}></i>
+                      <div style={{ fontSize: '0.75rem', fontFamily: 'Courier New', color: '#64748b' }}>localhost:5173 - active</div>
                     </div>
                   </div>
                 ) : (
