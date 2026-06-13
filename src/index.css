@@ -4168,4 +4168,107 @@ button, input, textarea, select {
     transition-delay: 0.2s;
 }
 
+/* ==========================================================================
+   PROJECTS MODAL POPUP
+   ========================================================================== */
+.proj-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 5, 4, 0.82);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    z-index: 11000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.proj-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.proj-modal-card {
+    width: 100%;
+    max-width: 760px;
+    background: rgba(15, 13, 12, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 35px 80px rgba(0, 0, 0, 0.8), 0 0 50px rgba(226, 201, 153, 0.04);
+    overflow: hidden;
+    position: relative;
+    transform: translateY(40px) scale(0.96);
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    max-height: 88vh;
+    z-index: 11001;
+}
+
+.proj-modal-overlay.active .proj-modal-card {
+    transform: translateY(0) scale(1);
+}
+
+.proj-modal-close {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 12;
+}
+
+.proj-modal-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(90deg);
+    color: var(--accent-cyan);
+}
+
+.proj-modal-visual {
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+}
+
+.proj-modal-body {
+    padding: 36px 40px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.proj-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+.proj-modal-body::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+@media (max-width: 576px) {
+    .proj-modal-body {
+        padding: 24px;
+        gap: 16px;
+    }
+    .proj-modal-body ul.proj-features {
+        grid-template-columns: 1fr !important;
+    }
+}
+
 
