@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import PageTransition from './components/PageTransition';
@@ -21,9 +21,8 @@ import Footer from './components/Footer';
 function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrollPercent, setScrollPercent] = useState(0);
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 });
-  const [cursorHovered, setCursorHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
+  const cursorRef = useRef(null);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -34,14 +33,22 @@ function App() {
     window.addEventListener('resize', checkDevice);
 
     const handleMouseMove = (e) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+      }
       document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
       document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
     };
     
     const handleMouseOver = (e) => {
       const isInteractive = e.target.closest('a, button, input, textarea, .proj-filter-btn, .social-link, .interest-card-item, .skill-modern-badge, .btn, .tag, .galaxy-planet-node, .console-tab-btn, .service-card, .floating-terminal-trigger');
-      setCursorHovered(!!isInteractive);
+      if (cursorRef.current) {
+        if (isInteractive) {
+          cursorRef.current.classList.add('hovered');
+        } else {
+          cursorRef.current.classList.remove('hovered');
+        }
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -177,9 +184,10 @@ function App() {
       {/* Premium Custom Cursor Follower */}
       {!isMobile && (
         <div 
-          className={`custom-cursor-follower ${cursorHovered ? 'hovered' : ''}`}
+          ref={cursorRef}
+          className="custom-cursor-follower"
           style={{ 
-            transform: `translate3d(calc(${cursorPos.x}px - 50%), calc(${cursorPos.y}px - 50%), 0)`
+            transform: 'translate3d(-100px, -100px, 0)'
           }}
           aria-hidden="true"
         ></div>
