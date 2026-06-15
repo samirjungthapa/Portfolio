@@ -157,7 +157,7 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
       document.removeEventListener('click', handleAnchorClick);
     };
-  }, []);
+  }, [isLoading]);
 
   const scrollToTop = (e) => {
     e.preventDefault();
