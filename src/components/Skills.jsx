@@ -1,148 +1,81 @@
+import { motion } from 'framer-motion';
 
+const skillsData = [
+  { name: 'React.js', icon: 'fa-brands fa-react', desc: 'Component Architecture, Hooks, Context API' },
+  { name: 'Next.js', icon: 'fa-solid fa-cube', desc: 'Server Side Rendering, Route Handlers' },
+  { name: 'JavaScript', icon: 'fa-brands fa-js', desc: 'ES6+, Asynchronous Events, Logic Flows' },
+  { name: 'TypeScript', icon: 'fa-solid fa-shield-halved', desc: 'Static Typing, Interfaces, Generic Declarations' },
+  { name: 'Tailwind CSS', icon: 'fa-brands fa-css3-alt', desc: 'Utility Classes, Layout Grids, Fluid Scales' },
+  { name: 'Node.js', icon: 'fa-brands fa-node-js', desc: 'Runtime Logic, API Routing, Server Architectures' },
+  { name: 'Git & Github', icon: 'fa-brands fa-git-alt', desc: 'Version Tree Control, Branch Deployments' },
+  { name: 'Java', icon: 'fa-brands fa-java', desc: 'Object-Oriented Structures, Data Collections' },
+  { name: 'Python', icon: 'fa-brands fa-python', desc: 'Automation Scripts, Data Parsers, CLI Tools' }
+];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 120, damping: 16 }
+  }
+};
 
 const Skills = () => {
   return (
-    <section id="skills" className="skills-section scroll-reveal">
+    <section id="skills" className="skills-section">
       <div className="container">
+        {/* Section Header */}
         <div className="section-header">
+          <span className="telemetry-label">SYSTEM_CAPABILITIES v4.0</span>
           <h2 className="section-title">Technical Expertise</h2>
-          <div className="section-subtitle">A comprehensive overview of my technical stack, frameworks, and core competencies</div>
-        </div>
-
-        <div className="skills-bento-grid">
-          {/* Card 1: Frontend Powerhouse (span-2) */}
-          <div className="bento-card span-2 glass-card reveal-item reveal-delay-1">
-            <div className="bento-card-header">
-              <i className="fa-solid fa-layer-group"></i>
-              <h3>Frontend Architecture</h3>
-            </div>
-            <div className="bento-skills-list-3col">
-              <div className="skill-card-item react-skill">
-                <div className="skill-card-icon"><i className="fa-brands fa-react react-color"></i></div>
-                <div className="skill-card-name">React.js</div>
-                <div className="skill-card-desc">Hooks, Context API, Components</div>
-              </div>
-              <div className="skill-card-item js-skill">
-                <div className="skill-card-icon"><i className="fa-brands fa-js js-color"></i></div>
-                <div className="skill-card-name">JavaScript</div>
-                <div className="skill-card-desc">ES6+, Async, DOM Manipulation</div>
-              </div>
-              <div className="skill-card-item html-skill">
-                <div className="skill-card-icon"><i className="fa-brands fa-html5 html-color"></i></div>
-                <div className="skill-card-name">HTML5 / CSS3</div>
-                <div className="skill-card-desc">Semantic UI, Flexbox, Animations</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: Backend & Data (span-1) */}
-          <div className="bento-card span-1 glass-card reveal-item reveal-delay-2">
-            <div className="bento-card-header">
-              <i className="fa-solid fa-server"></i>
-              <h3>Backend & Data</h3>
-            </div>
-            <div className="bento-skills-list-1col">
-              <div className="skill-card-item node-skill skill-card-item-horizontal">
-                <div className="skill-card-icon skill-icon-horizontal"><i className="fa-brands fa-node-js node-color"></i></div>
-                <div>
-                  <div className="skill-card-name skill-name-horizontal">Node.js</div>
-                  <div className="skill-card-desc">Server runtime</div>
-                </div>
-              </div>
-              <div className="skill-card-item mongodb-skill skill-card-item-horizontal">
-                <div className="skill-card-icon skill-icon-horizontal-svg"><span className="tech-svg-icon svg-mongodb"></span></div>
-                <div>
-                  <div className="skill-card-name skill-name-horizontal">MongoDB</div>
-                  <div className="skill-card-desc">NoSQL Database</div>
-                </div>
-              </div>
-              <div className="skill-card-item mysql-skill skill-card-item-horizontal">
-                <div className="skill-card-icon skill-icon-horizontal-svg"><span className="tech-svg-icon svg-mysql"></span></div>
-                <div>
-                  <div className="skill-card-name skill-name-horizontal">MySQL</div>
-                  <div className="skill-card-desc">Relational DB</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 3: Programming Logic (span-1) */}
-          <div className="bento-card span-1 glass-card reveal-item reveal-delay-3">
-            <div className="bento-card-header">
-              <i className="fa-solid fa-microchip"></i>
-              <h3>Core Programming</h3>
-            </div>
-            <div className="bento-skills-list-1col">
-              <div className="skill-card-item python-skill skill-card-item-large">
-                <div className="skill-card-icon skill-icon-large"><i className="fa-brands fa-python python-color"></i></div>
-                <div className="skill-card-name">Python</div>
-                <div className="skill-card-desc">Scripts, automation, algorithms</div>
-              </div>
-              <div className="skill-card-item python-skill skill-card-item-large">
-                <div className="skill-card-icon skill-icon-large"><i className="fa-brands fa-java java-color"></i></div>
-                <div className="skill-card-name">Java</div>
-                <div className="skill-card-desc">Object-oriented concepts, app dev</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 4: DevOps & Tools (span-1) */}
-          <div className="bento-card span-1 glass-card reveal-item reveal-delay-4">
-            <div className="bento-card-header">
-              <i className="fa-solid fa-toolbox"></i>
-              <h3>Tools & DevOps</h3>
-            </div>
-            <div className="bento-skills-list">
-              <div className="skill-card-item git-skill">
-                <div className="skill-card-icon"><i className="fa-brands fa-git-alt git-color"></i></div>
-                <div className="skill-card-name">Git</div>
-              </div>
-              <div className="skill-card-item docker-skill">
-                <div className="skill-card-icon"><i className="fa-brands fa-docker docker-color"></i></div>
-                <div className="skill-card-name">Docker</div>
-              </div>
-              <div className="skill-card-item github-skill">
-                <div className="skill-card-icon"><i className="fa-brands fa-github github-color"></i></div>
-                <div className="skill-card-name">GitHub</div>
-              </div>
-              <div className="skill-card-item responsive-skill">
-                <div className="skill-card-icon" style={{ color: '#FCC624' }}><i className="fa-brands fa-linux"></i></div>
-                <div className="skill-card-name">Linux</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 5: Design & Architecture (span-1) */}
-          <div className="bento-card span-1 glass-card reveal-item reveal-delay-5">
-            <div className="bento-card-header">
-              <i className="fa-solid fa-pen-nib"></i>
-              <h3>Design & Systems</h3>
-            </div>
-            <div className="bento-skills-list-1col">
-              <div className="skill-card-item figma-skill skill-card-item-horizontal">
-                <div className="skill-card-icon skill-icon-horizontal-svg"><span className="tech-svg-icon svg-figma"></span></div>
-                <div>
-                  <div className="skill-card-name skill-name-horizontal">Figma</div>
-                  <div className="skill-card-desc">UI/UX prototyping</div>
-                </div>
-              </div>
-              <div className="skill-card-item responsive-skill skill-card-item-horizontal">
-                <div className="skill-card-icon skill-icon-horizontal" style={{ color: 'var(--accent-cyan)' }}><i className="fa-solid fa-mobile-screen-button"></i></div>
-                <div>
-                  <div className="skill-card-name skill-name-horizontal">Responsive Design</div>
-                  <div className="skill-card-desc">Mobile-first approach</div>
-                </div>
-              </div>
-              <div className="skill-card-item responsive-skill skill-card-item-horizontal">
-                <div className="skill-card-icon skill-icon-horizontal-svg"><span className="tech-svg-icon svg-vercel"></span></div>
-                <div>
-                  <div className="skill-card-name skill-name-horizontal">Vercel Hosting</div>
-                  <div className="skill-card-desc">CI/CD Deployments</div>
-                </div>
-              </div>
-            </div>
+          <div className="section-subtitle">
+            Modern toolsets and frameworks leveraged to engineer clean product interfaces
           </div>
         </div>
+
+        {/* Tech Grid */}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="tech-grid"
+        >
+          {skillsData.map((skill) => (
+            <motion.div
+              key={skill.name}
+              variants={cardVariants}
+              whileHover={{ 
+                y: -6,
+                borderColor: "rgba(201, 162, 39, 0.45)",
+                boxShadow: "0 12px 30px rgba(201, 162, 39, 0.08)"
+              }}
+              className="tech-card"
+            >
+              <div className="tech-icon">
+                <i className={skill.icon}></i>
+              </div>
+              <h4 style={{ fontSize: '1.05rem', fontWeight: '700', color: 'var(--text-primary)' }}>
+                {skill.name}
+              </h4>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: '1.4', marginTop: '4px' }}>
+                {skill.desc}
+              </p>
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
