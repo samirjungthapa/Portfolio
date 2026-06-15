@@ -10,7 +10,12 @@ import Skills from './components/Skills';
 import Certifications from './components/Certifications';
 import Services from './components/Services';
 import Projects from './components/Projects';
+import GithubStats from './components/GithubStats';
+import Testimonials from './components/Testimonials';
 import Contact from './components/Contact';
+import SmoothScroll from './components/SmoothScroll';
+import TerminalConsole from './components/TerminalConsole';
+import GlobalCanvas from './components/GlobalCanvas';
 import Footer from './components/Footer';
 
 function App() {
@@ -30,10 +35,12 @@ function App() {
 
     const handleMouseMove = (e) => {
       setCursorPos({ x: e.clientX, y: e.clientY });
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
     };
     
     const handleMouseOver = (e) => {
-      const isInteractive = e.target.closest('a, button, input, textarea, .proj-filter-btn, .social-link, .interest-card-item, .skill-modern-badge, .btn, .tag');
+      const isInteractive = e.target.closest('a, button, input, textarea, .proj-filter-btn, .social-link, .interest-card-item, .skill-modern-badge, .btn, .tag, .galaxy-planet-node, .console-tab-btn, .service-card, .floating-terminal-trigger');
       setCursorHovered(!!isInteractive);
     };
 
@@ -60,8 +67,8 @@ function App() {
         });
       },
       {
-        threshold: 0.15,
-        rootMargin: '0px 0px -50px 0px'
+        threshold: 0.01,
+        rootMargin: '0px 0px -20px 0px'
       }
     );
 
@@ -110,15 +117,19 @@ function App() {
             });
 
             const offset = 80; // Sticky header offset
-            const bodyRect = document.body.getBoundingClientRect().top;
-            const elementRect = targetEl.getBoundingClientRect().top;
-            const elementPosition = elementRect - bodyRect;
-            const offsetPosition = elementPosition - offset;
+            if (window.lenis) {
+              window.lenis.scrollTo(targetEl, { offset: -offset, immediate: true });
+            } else {
+              const bodyRect = document.body.getBoundingClientRect().top;
+              const elementRect = targetEl.getBoundingClientRect().top;
+              const elementPosition = elementRect - bodyRect;
+              const offsetPosition = elementPosition - offset;
 
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'auto' // Instant jump while overlay is fully opaque
-            });
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'auto'
+              });
+            }
           }, 350);
         }
       }
@@ -141,15 +152,25 @@ function App() {
     e.preventDefault();
     window.dispatchEvent(new CustomEvent('page-transition-trigger'));
     setTimeout(() => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'auto'
-      });
+      if (window.lenis) {
+        window.lenis.scrollTo(0, { immediate: true });
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'auto'
+        });
+      }
     }, 350);
   };
 
   return (
-    <>
+    <SmoothScroll>
+      {/* Scroll-driven unified 3D starfield backdrop */}
+      <GlobalCanvas />
+
+      {/* Global Mouse Follow Spotlight */}
+      <div className="spotlight-glow" aria-hidden="true"></div>
+
       {/* Premium Screen Wipe Page Transition */}
       <PageTransition />
 
@@ -184,8 +205,6 @@ function App() {
         {/* Hero Banner Section */}
         <Hero />
 
-
-
         {/* Biographical Details Section */}
         <About />
 
@@ -207,13 +226,22 @@ function App() {
         {/* Filterable Projects Section */}
         <Projects />
 
+        {/* GitHub Statistics Section */}
+        <GithubStats />
+
+        {/* Testimonials Section */}
+        <Testimonials />
+
         {/* Location cards and Contact Form Validation Section */}
         <Contact />
       </main>
 
       {/* Copyright Footer */}
       <Footer />
-    </>
+
+      {/* Interactive Diagnostics Terminal Overlay */}
+      <TerminalConsole />
+    </SmoothScroll>
   );
 }
 
