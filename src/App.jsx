@@ -4,6 +4,7 @@ import Hero from './components/Hero';
 import PageTransition from './components/PageTransition';
 
 import About from './components/About';
+import BentoGrid from './components/BentoGrid';
 import Education from './components/Education';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
@@ -17,11 +18,14 @@ import SmoothScroll from './components/SmoothScroll';
 import TerminalConsole from './components/TerminalConsole';
 import GlobalCanvas from './components/GlobalCanvas';
 import Footer from './components/Footer';
+import LoadingScreen from './components/LoadingScreen';
+import CommandPalette from './components/CommandPalette';
 
 function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrollPercent, setScrollPercent] = useState(0);
   const [isMobile, setIsMobile] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const cursorRef = useRef(null);
 
   useEffect(() => {
@@ -171,85 +175,98 @@ function App() {
   };
 
   return (
-    <SmoothScroll>
-      {/* Scroll-driven unified 3D starfield backdrop */}
-      <GlobalCanvas />
+    <>
+      {/* Raycast/Linear inspired Command Palette */}
+      <CommandPalette />
 
-      {/* Global Mouse Follow Spotlight */}
-      <div className="spotlight-glow" aria-hidden="true"></div>
+      {/* Letter-by-letter blur reveal load sequence */}
+      <LoadingScreen onComplete={() => setIsLoading(false)} />
 
-      {/* Premium Screen Wipe Page Transition */}
-      <PageTransition />
+      {!isLoading && (
+        <SmoothScroll>
+          {/* Scroll-driven unified 3D starfield backdrop */}
+          <GlobalCanvas />
 
-      {/* Premium Custom Cursor Follower */}
-      {!isMobile && (
-        <div 
-          ref={cursorRef}
-          className="custom-cursor-follower"
-          style={{ 
-            transform: 'translate3d(-100px, -100px, 0)'
-          }}
-          aria-hidden="true"
-        ></div>
+          {/* Global Mouse Follow Spotlight */}
+          <div className="spotlight-glow" aria-hidden="true"></div>
+
+          {/* Premium Screen Wipe Page Transition */}
+          <PageTransition />
+
+          {/* Premium Custom Cursor Follower */}
+          {!isMobile && (
+            <div 
+              ref={cursorRef}
+              className="custom-cursor-follower"
+              style={{ 
+                transform: 'translate3d(-100px, -100px, 0)'
+              }}
+              aria-hidden="true"
+            ></div>
+          )}
+
+          {/* Global Scroll Progress Bar */}
+          <div className="scroll-progress-bar" style={{ width: `${scrollPercent}%` }} aria-hidden="true"></div>
+
+          {/* Back to Top Icon Trigger */}
+          <a 
+            href="#home" 
+            className={`back-to-top ${showScrollTop ? 'show' : ''}`} 
+            onClick={scrollToTop}
+            aria-label="Back to Top"
+          >
+            <i className="fa-solid fa-arrow-up"></i>
+          </a>
+
+          {/* Navigation Header */}
+          <Header />
+
+          <main>
+            {/* Hero Banner Section */}
+            <Hero />
+
+            {/* Biographical Details Section */}
+            <About />
+
+            {/* Premium Bento Grid Dashboard */}
+            <BentoGrid />
+
+            {/* Educational Qualification Timeline Section */}
+            <Education />
+
+            {/* Work Achievements Timeline Section */}
+            <Experience />
+
+            {/* Technical Competencies Progress Bars Section */}
+            <Skills />
+
+            {/* Verified Credentials Section */}
+            <Certifications />
+
+            {/* Freelancing Services Section */}
+            <Services />
+
+            {/* Filterable Projects Section */}
+            <Projects />
+
+            {/* GitHub Statistics Section */}
+            <GithubStats />
+
+            {/* Testimonials Section */}
+            <Testimonials />
+
+            {/* Location cards and Contact Form Validation Section */}
+            <Contact />
+          </main>
+
+          {/* Copyright Footer */}
+          <Footer />
+
+          {/* Interactive Diagnostics Terminal Overlay */}
+          <TerminalConsole />
+        </SmoothScroll>
       )}
-
-      {/* Global Scroll Progress Bar */}
-      <div className="scroll-progress-bar" style={{ width: `${scrollPercent}%` }} aria-hidden="true"></div>
-
-      {/* Back to Top Icon Trigger */}
-      <a 
-        href="#home" 
-        className={`back-to-top ${showScrollTop ? 'show' : ''}`} 
-        onClick={scrollToTop}
-        aria-label="Back to Top"
-      >
-        <i className="fa-solid fa-arrow-up"></i>
-      </a>
-
-      {/* Navigation Header */}
-      <Header />
-
-      <main>
-        {/* Hero Banner Section */}
-        <Hero />
-
-        {/* Biographical Details Section */}
-        <About />
-
-        {/* Educational Qualification Timeline Section */}
-        <Education />
-
-        {/* Work Achievements Timeline Section */}
-        <Experience />
-
-        {/* Technical Competencies Progress Bars Section */}
-        <Skills />
-
-        {/* Verified Credentials Section */}
-        <Certifications />
-
-        {/* Freelancing Services Section */}
-        <Services />
-
-        {/* Filterable Projects Section */}
-        <Projects />
-
-        {/* GitHub Statistics Section */}
-        <GithubStats />
-
-        {/* Testimonials Section */}
-        <Testimonials />
-
-        {/* Location cards and Contact Form Validation Section */}
-        <Contact />
-      </main>
-
-      {/* Copyright Footer */}
-      <Footer />
-
-      {/* Interactive Diagnostics Terminal Overlay */}
-      <TerminalConsole />
-    </SmoothScroll>
+    </>
   );
 }
 
