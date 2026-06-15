@@ -1,126 +1,188 @@
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import Magnetic from './Magnetic';
 
-const titles = ["Frontend Developer", "Computing Student", "Freelance Developer"];
+const subtitles = [
+  "Frontend Developer",
+  "Computing Student",
+  "Freelancer",
+  "React Developer",
+  "UI/UX Enthusiast"
+];
 
 const Hero = () => {
-  const [titleIndex, setTitleIndex] = useState(0);
-  const [charIndex, setCharIndex] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [typingText, setTypingText] = useState('');
+  const [index, setIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const sectionRef = useRef(null);
 
-  // Trigger load entrance animations on mount
+  // Motion values for 3D Tilt
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const rotateX = useTransform(mouseY, [-200, 200], [10, -10]);
+  const rotateY = useTransform(mouseX, [-200, 200], [-10, 10]);
+
+  const rx = useSpring(rotateX, { stiffness: 180, damping: 20 });
+  const ry = useSpring(rotateY, { stiffness: 180, damping: 20 });
+
+  // Rotate roles every 3 seconds
   useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 50);
-    return () => clearTimeout(timer);
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % subtitles.length);
+    }, 3000);
+    setIsLoaded(true);
+    return () => clearInterval(timer);
   }, []);
 
-  // Cursor spotlight effect
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-    const handleMouseMove = (e) => {
-      const rect = section.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      section.style.setProperty('--cursor-x', `${x}px`);
-      section.style.setProperty('--cursor-y', `${y}px`);
-    };
-    section.addEventListener('mousemove', handleMouseMove);
-    return () => section.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const handleMouseMove3D = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    // Mouse coords centered around the element mid-point
+    const x = e.clientX - rect.left - width / 2;
+    const y = e.clientY - rect.top - height / 2;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
 
-  // Typing effect logic
-  useEffect(() => {
-    const currentTitle = titles[titleIndex];
-    let timer;
-    if (isDeleting) {
-      timer = setTimeout(() => {
-        setTypingText(currentTitle.substring(0, charIndex - 1));
-        setCharIndex(prev => prev - 1);
-      }, 50);
-    } else {
-      timer = setTimeout(() => {
-        setTypingText(currentTitle.substring(0, charIndex + 1));
-        setCharIndex(prev => prev + 1);
-      }, 100);
-    }
-    if (!isDeleting && charIndex === currentTitle.length) {
-      timer = setTimeout(() => setIsDeleting(true), 1500);
-    } else if (isDeleting && charIndex === 0) {
-      timer = setTimeout(() => {
-        setIsDeleting(false);
-        setTitleIndex((prev) => (prev + 1) % titles.length);
-      }, 0);
-    }
-    return () => clearTimeout(timer);
-  }, [charIndex, isDeleting, titleIndex]);
+  const handleMouseLeave3D = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
+  // Headline split characters
+  const headlineWords = "Samir Jung Thapa".split(" ");
 
   return (
-    <section id="home" ref={sectionRef} className={`hero-section hero-spotlight ${isLoaded ? 'animate-on-load' : ''}`}>
+    <section id="home" ref={sectionRef} className="hero-section hero-spotlight">
       <div className="hero-background">
         <div className="grid-overlay"></div>
-        <div className="blur-glow glow-1"></div>
-        <div className="blur-glow glow-2"></div>
-        <div className="blur-glow glow-3"></div>
       </div>
 
-      <div className="container hero-container">
-        {/* Left Side: Copywriting intro and CTAs */}
+      <div className="container hero-container" style={{ position: 'relative', zIndex: 2 }}>
+        {/* Left Side: Editorial copywriting & CTAs */}
         <div className="hero-content">
-
           {/* Availability Badge */}
-          <div className="availability-badge reveal-item reveal-delay-1">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="availability-badge"
+          >
             <span className="avail-dot"></span>
-            Available for Freelance Work
-          </div>
+            Open to Freelance Work
+          </motion.div>
 
-          <h1 className="hero-name reveal-item reveal-delay-2">I'm <span className="gradient-text">Samir Jung Thapa</span></h1>
-          <h2 className="hero-title reveal-item reveal-delay-3">
-            <span className="dynamic-txt-wrapper">
-              <span className="dynamic-txt">{typingText}</span>
+          {/* Main Headline (Split-Word Reveal with Blur) */}
+          <h1 className="hero-name" style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            {headlineWords.map((word, wordIdx) => (
+              <span key={wordIdx} style={{ display: 'inline-block', overflow: 'hidden' }}>
+                <motion.span
+                  initial={{ y: "100%", filter: "blur(6px)", opacity: 0 }}
+                  animate={{ y: 0, filter: "blur(0px)", opacity: 1 }}
+                  transition={{
+                    duration: 0.8,
+                    delay: 0.4 + wordIdx * 0.15,
+                    ease: [0.16, 1, 0.3, 1]
+                  }}
+                  style={{ display: 'inline-block' }}
+                >
+                  {word}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+
+          {/* Rolodex Text Wheel Subtitle */}
+          <h2 className="hero-title" style={{ marginTop: '10px', minHeight: '1.4em', display: 'flex', alignItems: 'center' }}>
+            <span className="rolodex-container">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={index}
+                  initial={{ y: 30, filter: "blur(4px)", opacity: 0 }}
+                  animate={{ y: 0, filter: "blur(0px)", opacity: 1 }}
+                  exit={{ y: -30, filter: "blur(4px)", opacity: 0 }}
+                  transition={{ type: "spring", stiffness: 220, damping: 20 }}
+                  className="gradient-text"
+                  style={{ display: 'inline-block' }}
+                >
+                  {subtitles[index]}
+                </motion.span>
+              </AnimatePresence>
             </span>
           </h2>
-          <p className="hero-intro reveal-item reveal-delay-4">
-            A passionate Frontend Developer and B.Sc. (Hons) Computing student from Nepal. I craft modern, responsive, and user-friendly web experiences using React, JavaScript, and cutting-edge CSS.
-          </p>
-          <div className="hero-actions reveal-item reveal-delay-5">
-            <a href="#projects" className="btn btn-primary">
-              View Projects <i className="fa-solid fa-arrow-right"></i>
-            </a>
-            <a href="#contact" className="btn btn-secondary">
-              Contact Me
-            </a>
-            <a href="assets/resume.html" className="btn btn-tertiary" target="_blank" rel="noopener noreferrer">
-              <i className="fa-solid fa-download"></i> Download CV
-            </a>
-          </div>
 
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="hero-intro"
+          >
+            A passionate Frontend Developer and B.Sc. (Hons) Computing student from Nepal. I craft modern, responsive, and user-friendly web experiences using React, JavaScript, and cutting-edge CSS.
+          </motion.p>
+
+          {/* Staggered CTAs */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 1.1 }}
+            className="hero-actions"
+          >
+            <Magnetic>
+              <a href="#projects" className="btn btn-primary">
+                View Projects <i className="fa-solid fa-arrow-right"></i>
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="#contact" className="btn btn-secondary">
+                Contact Me
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a href="public/assets/resume.pdf" className="btn btn-tertiary" target="_blank" rel="noopener noreferrer">
+                <i className="fa-solid fa-download"></i> Download CV
+              </a>
+            </Magnetic>
+          </motion.div>
         </div>
 
-        {/* Right Side: Professional Avatar with glowing ring and floating badges */}
-        <div className="hero-avatar-area reveal-right reveal-delay-3">
-          <div className="floating-badge badge-1 badge-float-anim-1">
-            <i className="fa-solid fa-code"></i>
+        {/* Right Side: Portrait Area with 3D Tilt Frame and Drifting Physics Badges */}
+        <div className="hero-avatar-area" style={{ perspective: 1200 }}>
+          {/* Floating badge 1 */}
+          <motion.div 
+            animate={{ y: [0, -12, 0], rotate: [0, 2, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="floating-badge badge-1"
+          >
+            <i className="fa-solid fa-code" style={{ color: 'var(--accent-cyan)' }}></i>
             <span>Frontend Dev</span>
-          </div>
-          <div className="floating-badge badge-2 badge-float-anim-2">
-            <i className="fa-solid fa-graduation-cap"></i>
-            <span>Computing Student</span>
-          </div>
+          </motion.div>
 
-          <div className="avatar-frame-wrapper avatar-float-anim">
+          {/* Floating badge 2 */}
+          <motion.div 
+            animate={{ y: [0, 10, 0], rotate: [0, -3, 0] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="floating-badge badge-2"
+          >
+            <i className="fa-solid fa-graduation-cap" style={{ color: 'var(--accent-blue)' }}></i>
+            <span>Computing Student</span>
+          </motion.div>
+
+          {/* 3D Tilting Frame Wrapper */}
+          <motion.div
+            style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
+            onMouseMove={handleMouseMove3D}
+            onMouseLeave={handleMouseLeave3D}
+            className="avatar-frame-wrapper"
+          >
             <div className="avatar-circle-outer">
-              <div className="avatar-circle-inner">
+              <div className="avatar-circle-inner" style={{ transform: 'translateZ(30px)' }}>
                 <img src="assets/avatar_edited.jpg" alt="Samir Jung Thapa" className="profile-img" />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-
-
 
       {/* Bouncing Scroll Down Prompt */}
       <a href="#about" className="scroll-down-prompt" aria-label="Scroll to About">
