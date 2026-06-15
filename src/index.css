@@ -2623,6 +2623,19 @@ button, input, textarea, select {
     resize: none;
 }
 
+/* Change Autocomplete styles in Chrome/Firefox */
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover, 
+.contact-form input:-webkit-autofill:focus,
+.contact-form textarea:-webkit-autofill,
+.contact-form textarea:-webkit-autofill:hover,
+.contact-form textarea:-webkit-autofill:focus {
+    border: 1px solid var(--border-color);
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-box-shadow: 0 0 0px 1000px #050505 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
 .contact-form input:focus, .contact-form textarea:focus {
     border-color: var(--accent-cyan);
     background: rgba(3, 3, 8, 0.85);

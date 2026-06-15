@@ -202,7 +202,7 @@ const Contact = () => {
                     onChange={handleInputChange}
                     placeholder=" "
                   ></textarea>
-                  <label htmlFor="message" style={{ top: '18px' }}>MESSAGE CONTENT</label>
+                  <label htmlFor="message">MESSAGE CONTENT</label>
                 </div>
                 <span className="error-message">Message body required</span>
               </div>
