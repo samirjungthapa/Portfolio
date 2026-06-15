@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { playSuccess } from '../utils/audioManager';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,6 @@ const Contact = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Reset individual error status on type
     setErrors((prev) => ({ ...prev, [name]: false, emailInvalid: false }));
     setSubmitError(null);
   };
@@ -46,7 +46,6 @@ const Contact = () => {
 
     setErrors(newErrors);
 
-    // If no validation errors exist, send message to Web3Forms
     if (!Object.values(newErrors).some(Boolean)) {
       setIsSubmitting(true);
       setSubmitError(null);
@@ -73,75 +72,63 @@ const Contact = () => {
         const result = await response.json();
 
         if (result.success) {
+          playSuccess();
           setShowSuccess(true);
-          // Reset form state
-          setFormData({
-            name: '',
-            email: '',
-            subject: '',
-            message: ''
-          });
+          setFormData({ name: '', email: '', subject: '', message: '' });
         } else {
-          setSubmitError(result.message || "Something went wrong. Please check your Access Key.");
+          setSubmitError(result.message || "Failed to finalize communication socket.");
         }
       } catch {
-        setSubmitError("Failed to connect to the server. Please check your internet connection.");
+        setSubmitError("Failed to resolve socket address. Please check your system link.");
       } finally {
         setIsSubmitting(false);
       }
     }
   };
 
-  const closeSuccess = () => {
-    setShowSuccess(false);
-  };
-
   return (
     <section id="contact" className="contact-section scroll-reveal">
       <div className="container">
         <div className="section-header">
-          <h2 className="section-title">Contact Me</h2>
-          <div className="section-subtitle">Let's work together or get in touch</div>
+          <span className="telemetry-label">COMMS_LINK v3.2</span>
+          <h2 className="section-title">Holographic Sockets</h2>
+          <div className="section-subtitle">Establish transmission channels for active routing.</div>
         </div>
 
         <div className="contact-grid">
-          {/* Left Side: Contact Information Cards */}
+          {/* Left Side: Comms Sockets */}
           <div className="contact-info-column reveal-left reveal-delay-2">
-            <h3 className="contact-heading">Get in Touch</h3>
+            <h3 className="contact-heading">Channel Routing</h3>
             <p className="contact-text">
-              Whether you want to discuss a potential project, ask a question about my studies, or just say hello, feel free to reach out. I will get back to you as soon as possible.
+              Configure parameters to connect directly with Samir's host terminal. Sockets automatically resolve connection sequences:
             </p>
 
             <div className="contact-cards">
-              {/* Email link */}
               <div className="contact-info-card glass-card">
-                <div className="card-icon"><i className="fa-solid fa-envelope"></i></div>
+                <div className="card-icon" style={{ borderColor: 'rgba(226,201,153,0.3)' }}><i className="fa-solid fa-envelope"></i></div>
                 <div className="card-details">
-                  <h4>Email Me</h4>
+                  <span className="socket-label">SOCKET_01 [EMAIL]</span>
                   <a href="mailto:Samirjungthapa7@gmail.com" className="contact-link">Samirjungthapa7@gmail.com</a>
                 </div>
               </div>
 
-              {/* Phone link */}
               <div className="contact-info-card glass-card">
-                <div className="card-icon"><i className="fa-solid fa-phone"></i></div>
+                <div className="card-icon" style={{ borderColor: 'rgba(226,201,153,0.3)' }}><i className="fa-solid fa-phone"></i></div>
                 <div className="card-details">
-                  <h4>Call Me</h4>
+                  <span className="socket-label">SOCKET_02 [VOICE]</span>
                   <a href="tel:9822434711" className="contact-link">9822434711</a>
                 </div>
               </div>
 
-              {/* Location Card */}
               <div className="contact-info-card glass-card">
-                <div className="card-icon"><i className="fa-solid fa-location-dot"></i></div>
+                <div className="card-icon" style={{ borderColor: 'rgba(226,201,153,0.3)' }}><i className="fa-solid fa-location-dot"></i></div>
                 <div className="card-details">
-                  <h4>Location</h4>
-                  <span className="contact-link-text">SundarHaraicha-5, Morang, Nepal</span>
+                  <span className="socket-label">SOCKET_03 [LOC]</span>
+                  <span className="contact-link-text">Morang, Nepal [UTC+5:45]</span>
                 </div>
               </div>
             </div>
 
-            {/* Social Network Links */}
             <div className="social-links-wrapper">
               <a href="https://github.com/samirjungthapa" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="GitHub"><i className="fa-brands fa-github"></i></a>
               <a href="https://www.linkedin.com/in/samir-jung-thapa-21aaa83b6" target="_blank" rel="noopener noreferrer" className="social-link" aria-label="LinkedIn"><i className="fa-brands fa-linkedin-in"></i></a>
@@ -149,10 +136,10 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Right Side: Message Submission Form */}
+          {/* Right Side: Form Submission Socket */}
           <div className="contact-form-column glass-card reveal-right reveal-delay-3">
             <form onSubmit={handleSubmit} className="contact-form" noValidate>
-              <h3 className="form-title">Send a Message</h3>
+              <h3 className="form-title">Open Link Socket</h3>
               
               <div className={`form-group-floating ${errors.name ? 'invalid' : ''}`}>
                 <div className="input-wrapper">
@@ -165,9 +152,9 @@ const Contact = () => {
                     onChange={handleInputChange}
                     placeholder=" " 
                   />
-                  <label htmlFor="name">Your Name</label>
+                  <label htmlFor="name">IDENTIFIER</label>
                 </div>
-                <span className="error-message">Name is required</span>
+                <span className="error-message">Identifier required</span>
               </div>
 
               <div className={`form-group-floating ${errors.email || errors.emailInvalid ? 'invalid' : ''}`}>
@@ -181,10 +168,10 @@ const Contact = () => {
                     onChange={handleInputChange}
                     placeholder=" " 
                   />
-                  <label htmlFor="email">Your Email</label>
+                  <label htmlFor="email">RESPONSE PATH (EMAIL)</label>
                 </div>
                 <span className="error-message">
-                  {errors.email ? 'Email is required' : 'Please enter a valid email'}
+                  {errors.email ? 'Response path required' : 'Invalid route address'}
                 </span>
               </div>
 
@@ -199,9 +186,9 @@ const Contact = () => {
                     onChange={handleInputChange}
                     placeholder=" " 
                   />
-                  <label htmlFor="subject">Subject</label>
+                  <label htmlFor="subject">TRANSMISSION HEADER</label>
                 </div>
-                <span className="error-message">Subject is required</span>
+                <span className="error-message">Transmission header required</span>
               </div>
 
               <div className={`form-group-floating ${errors.message ? 'invalid' : ''}`}>
@@ -215,40 +202,53 @@ const Contact = () => {
                     onChange={handleInputChange}
                     placeholder=" "
                   ></textarea>
-                  <label htmlFor="message" style={{ top: '18px' }}>Message</label>
+                  <label htmlFor="message" style={{ top: '18px' }}>MESSAGE CONTENT</label>
                 </div>
-                <span className="error-message">Message is required</span>
+                <span className="error-message">Message body required</span>
               </div>
 
-              <button type="submit" className="btn btn-primary btn-block" disabled={isSubmitting}>
-                {isSubmitting ? (
-                  <>Sending... <i className="fa-solid fa-spinner fa-spin"></i></>
-                ) : (
-                  <>Send Message <i className="fa-solid fa-paper-plane"></i></>
-                )}
-              </button>
-
               {submitError && (
-                <div className="form-submit-error" style={{ color: '#EF4444', marginTop: '12px', fontSize: '0.9rem', textAlign: 'center', fontWeight: '600' }}>
+                <div className="submit-error-msg" style={{ color: '#ff5f56', fontSize: '0.85rem', marginBottom: '16px' }}>
                   <i className="fa-solid fa-triangle-exclamation"></i> {submitError}
                 </div>
               )}
+
+              <button 
+                type="submit" 
+                className="btn btn-primary"
+                style={{ width: '100%' }}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <i className="fa-solid fa-spinner fa-spin"></i> TRANSMITTING CYCLES...
+                  </>
+                ) : (
+                  <>
+                    <i className="fa-solid fa-paper-plane"></i> INITIALIZE CONNECTION
+                  </>
+                )}
+              </button>
             </form>
-            
-            {/* Form Success Overlay Popup Modal */}
-            <div className={`success-message-overlay ${showSuccess ? 'show' : ''}`}>
-              <div className="success-message-box glass-card">
-                <div className="success-icon"><i className="fa-solid fa-circle-check"></i></div>
-                <h3>Thank you!</h3>
-                <p>Your message has been sent successfully. Samir will get back to you shortly.</p>
-                <button type="button" className="btn btn-primary" onClick={closeSuccess}>
-                  Close
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+
+      {/* Success Dialog Popup */}
+      {showSuccess && (
+        <div className="proj-modal-overlay active" onClick={() => setShowSuccess(false)}>
+          <div className="proj-modal-card" style={{ maxWidth: '450px', padding: '40px 32px', textAlign: 'center' }} onClick={(e) => e.stopPropagation()}>
+            <i className="fa-solid fa-circle-check" style={{ color: 'var(--accent-cyan)', fontSize: '3.5rem', marginBottom: '20px' }}></i>
+            <h3 style={{ fontSize: '1.6rem', marginBottom: '12px' }}>Connection Established</h3>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '24px', fontSize: '0.95rem' }}>
+              Your transmission package has been routed successfully. Samir's terminal will respond in due cycles.
+            </p>
+            <button className="btn btn-primary" onClick={() => setShowSuccess(false)} style={{ width: '100%' }}>
+              Close Socket Link
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
