@@ -52,6 +52,7 @@ const Skills = () => {
                 onClick={() => setActiveCategory(cat)}
                 style={{
                   position: 'relative',
+                  zIndex: 1,
                   padding: '10px 24px',
                   borderRadius: '50px',
                   fontSize: '0.9rem',
