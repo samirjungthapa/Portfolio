@@ -32,7 +32,7 @@ const educationData = [
 
 const Education = () => {
   return (
-    <section id="education" className="education-section scroll-reveal">
+    <section id="education" className="education-section scroll-reveal" style={{ padding: '80px 0', position: 'relative' }}>
       <div className="container">
         {/* Animated Section Header */}
         <motion.div 
@@ -42,38 +42,113 @@ const Education = () => {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
+          <span className="telemetry-label">ACADEMIC_RECORD v1.4</span>
           <h2 className="section-title">Education</h2>
-          <div className="section-subtitle">My academic qualification timeline</div>
+          <div className="section-subtitle">My academic qualification stacked deck</div>
         </motion.div>
 
-        <div className="timeline-container">
+        {/* Sticky Stacking Cards Container */}
+        <div 
+          className="education-stack-container" 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '40px', 
+            maxWidth: '850px', 
+            margin: '0 auto',
+            paddingBottom: '60px'
+          }}
+        >
           {educationData.map((item, idx) => (
             <motion.div 
               key={item.id}
-              className="timeline-item education-item"
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8, delay: idx * 0.15, ease: "easeOut" }}
+              className="education-card glass-card"
+              style={{
+                position: 'sticky',
+                top: `calc(130px + ${idx * 32}px)`,
+                zIndex: idx + 1,
+                padding: '36px',
+                borderRadius: 'var(--radius-lg)',
+                backgroundColor: 'rgba(8, 8, 8, 0.95)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                boxShadow: '0 30px 60px rgba(0, 0, 0, 0.7)',
+                backdropFilter: 'blur(30px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(30px) saturate(180%)',
+              }}
+              initial={{ opacity: 0, y: 60 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, delay: idx * 0.05, ease: "easeOut" }}
+              whileHover={{ 
+                scale: 1.005, 
+                borderColor: "rgba(201, 162, 39, 0.3)",
+                boxShadow: "0 40px 80px rgba(201, 162, 39, 0.05)"
+              }}
             >
-              <div className="timeline-icon">
-                <i className={item.icon}></i>
-              </div>
-              <div className="timeline-date">{item.date}</div>
-              <motion.div 
-                className="timeline-content glass-card"
-                whileHover={{ scale: 1.02, translateY: -5 }}
-                transition={{ duration: 0.3 }}
+              {/* Header row */}
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'flex-start', 
+                  flexWrap: 'wrap', 
+                  gap: '16px', 
+                  marginBottom: '20px' 
+                }}
               >
-                <h3 className="degree-title">{item.title}</h3>
-                <h4 className="institution-name">{item.institution}</h4>
-                <p className="education-description">{item.desc}</p>
-                <div className="coursework-tags">
-                  {item.tags.map((tag) => (
-                    <span key={tag} className="course-tag">{tag}</span>
-                  ))}
+                <div>
+                  <h3 className="degree-title" style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>
+                    {item.title}
+                  </h3>
+                  <h4 className="institution-name" style={{ fontSize: '1rem', color: 'var(--accent-cyan)', marginTop: '4px', fontWeight: '500' }}>
+                    {item.institution}
+                  </h4>
                 </div>
-              </motion.div>
+                
+                <div 
+                  style={{ 
+                    fontSize: '0.8rem', 
+                    fontWeight: '600', 
+                    color: 'var(--text-secondary)', 
+                    padding: '6px 14px', 
+                    borderRadius: '50px', 
+                    background: 'rgba(255,255,255,0.03)', 
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <i className={item.icon} style={{ color: 'var(--accent-cyan)' }}></i>
+                  {item.date}
+                </div>
+              </div>
+              
+              {/* Description */}
+              <p className="education-description" style={{ fontSize: '0.95rem', color: 'var(--text-muted)', lineHeight: '1.7', marginBottom: '24px' }}>
+                {item.desc}
+              </p>
+              
+              {/* Coursework Tags */}
+              <div className="coursework-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                {item.tags.map((tag) => (
+                  <span 
+                    key={tag} 
+                    className="course-tag" 
+                    style={{ 
+                      fontSize: '0.75rem', 
+                      padding: '5px 12px', 
+                      borderRadius: '50px', 
+                      background: 'rgba(255, 255, 255, 0.02)', 
+                      border: '1px solid rgba(255, 255, 255, 0.05)', 
+                      color: 'var(--text-secondary)',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </motion.div>
           ))}
         </div>
