@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import Magnetic from './Magnetic';
-import videoBg from '../video';
 
 const subtitles = [
   "Frontend Developer",
@@ -70,21 +69,25 @@ const Hero = () => {
       <div className="video-background-container">
         <video 
           className="video-foreground" 
-          src={videoBg} 
           autoPlay 
           loop 
           muted 
           playsInline
-        />
+        >
+          <source src="/video.mp4" type="video/mp4" />
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-gold-particles-moving-in-organic-curves-43180-large.mp4" type="video/mp4" />
+        </video>
         <video 
           className="video-ambient-blur" 
-          src={videoBg} 
           autoPlay 
           loop 
           muted 
           playsInline
           aria-hidden="true"
-        />
+        >
+          <source src="/video.mp4" type="video/mp4" />
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-gold-particles-moving-in-organic-curves-43180-large.mp4" type="video/mp4" />
+        </video>
         <div className="cinematic-overlay-gradient"></div>
       </div>
 
