@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import Magnetic from './Magnetic';
+import videoBg from '../video';
 
 const subtitles = [
   "Frontend Developer",
@@ -25,6 +26,8 @@ const Hero = () => {
   const rx = useSpring(rotateX, { stiffness: 180, damping: 20 });
   const ry = useSpring(rotateY, { stiffness: 180, damping: 20 });
 
+  const rectRef = useRef(null);
+
   // Rotate roles every 3 seconds
   useEffect(() => {
     const timer = setInterval(() => {
@@ -34,8 +37,15 @@ const Hero = () => {
     return () => clearInterval(timer);
   }, []);
 
+  const handleMouseEnter3D = (e) => {
+    rectRef.current = e.currentTarget.getBoundingClientRect();
+  };
+
   const handleMouseMove3D = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    if (!rectRef.current) {
+      rectRef.current = e.currentTarget.getBoundingClientRect();
+    }
+    const rect = rectRef.current;
     const width = rect.width;
     const height = rect.height;
     // Mouse coords centered around the element mid-point
@@ -46,6 +56,7 @@ const Hero = () => {
   };
 
   const handleMouseLeave3D = () => {
+    rectRef.current = null;
     mouseX.set(0);
     mouseY.set(0);
   };
@@ -55,6 +66,28 @@ const Hero = () => {
 
   return (
     <section id="home" ref={sectionRef} className="hero-section hero-spotlight">
+      {/* Video Background Layer */}
+      <div className="video-background-container">
+        <video 
+          className="video-foreground" 
+          src={videoBg} 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+        />
+        <video 
+          className="video-ambient-blur" 
+          src={videoBg} 
+          autoPlay 
+          loop 
+          muted 
+          playsInline
+          aria-hidden="true"
+        />
+        <div className="cinematic-overlay-gradient"></div>
+      </div>
+
       <div className="hero-background">
         <div className="grid-overlay"></div>
       </div>
@@ -171,6 +204,7 @@ const Hero = () => {
           {/* 3D Tilting Frame Wrapper */}
           <motion.div
             style={{ rotateX: rx, rotateY: ry, transformStyle: 'preserve-3d' }}
+            onMouseEnter={handleMouseEnter3D}
             onMouseMove={handleMouseMove3D}
             onMouseLeave={handleMouseLeave3D}
             className="avatar-frame-wrapper"
