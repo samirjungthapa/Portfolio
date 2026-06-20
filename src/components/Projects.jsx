@@ -124,11 +124,22 @@ const categoryFilters = ["All", "Desktop App", "CLI App", "Web App"];
 // 3D Tilt Wrapper Component
 const TiltCard = ({ children, className }) => {
   const cardRef = useRef(null);
+  const rectRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    const card = cardRef.current;
+    if (card) {
+      rectRef.current = card.getBoundingClientRect();
+    }
+  };
 
   const handleMouseMove = (e) => {
     const card = cardRef.current;
     if (!card) return;
-    const rect = card.getBoundingClientRect();
+    if (!rectRef.current) {
+      rectRef.current = card.getBoundingClientRect();
+    }
+    const rect = rectRef.current;
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
@@ -140,6 +151,7 @@ const TiltCard = ({ children, className }) => {
   };
 
   const handleMouseLeave = () => {
+    rectRef.current = null;
     const card = cardRef.current;
     if (!card) return;
     card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)';
@@ -148,6 +160,7 @@ const TiltCard = ({ children, className }) => {
   return (
     <article
       ref={cardRef}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={className}

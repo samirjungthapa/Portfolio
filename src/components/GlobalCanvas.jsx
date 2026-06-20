@@ -1,14 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 const GlobalCanvas = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const blob1Ref = useRef(null);
+  const blob2Ref = useRef(null);
+  const blob3Ref = useRef(null);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
       const { clientX, clientY } = e;
       const x = (clientX / window.innerWidth - 0.5) * 45; // Subtle parallax coordinates
       const y = (clientY / window.innerHeight - 0.5) * 45;
-      setMousePos({ x, y });
+
+      if (blob1Ref.current) {
+        blob1Ref.current.style.transform = `translate3d(${x * 0.8}px, ${y * 0.8}px, 0)`;
+      }
+      if (blob2Ref.current) {
+        blob2Ref.current.style.transform = `translate3d(${x * -0.6}px, ${y * -0.6}px, 0)`;
+      }
+      if (blob3Ref.current) {
+        blob3Ref.current.style.transform = `translate3d(${x * 0.4}px, ${y * -0.4}px, 0)`;
+      }
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -19,10 +30,11 @@ const GlobalCanvas = () => {
     <div className="aurora-bg" aria-hidden="true">
       {/* Blob 1 Wrapper */}
       <div 
+        ref={blob1Ref}
         style={{
           position: 'absolute',
           inset: 0,
-          transform: `translate3d(${mousePos.x * 0.8}px, ${mousePos.y * 0.8}px, 0)`,
+          transform: 'translate3d(0px, 0px, 0)',
           transition: 'transform 0.5s cubic-bezier(0.1, 0.8, 0.3, 1)'
         }}
       >
@@ -31,10 +43,11 @@ const GlobalCanvas = () => {
 
       {/* Blob 2 Wrapper */}
       <div 
+        ref={blob2Ref}
         style={{
           position: 'absolute',
           inset: 0,
-          transform: `translate3d(${mousePos.x * -0.6}px, ${mousePos.y * -0.6}px, 0)`,
+          transform: 'translate3d(0px, 0px, 0)',
           transition: 'transform 0.5s cubic-bezier(0.1, 0.8, 0.3, 1)'
         }}
       >
@@ -43,10 +56,11 @@ const GlobalCanvas = () => {
 
       {/* Blob 3 Wrapper */}
       <div 
+        ref={blob3Ref}
         style={{
           position: 'absolute',
           inset: 0,
-          transform: `translate3d(${mousePos.x * 0.4}px, ${mousePos.y * -0.4}px, 0)`,
+          transform: 'translate3d(0px, 0px, 0)',
           transition: 'transform 0.5s cubic-bezier(0.1, 0.8, 0.3, 1)'
         }}
       >

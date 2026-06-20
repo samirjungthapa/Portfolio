@@ -27,6 +27,7 @@ function App() {
   const [isMobile, setIsMobile] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const cursorRef = useRef(null);
+  const spotlightRef = useRef(null);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -40,8 +41,9 @@ function App() {
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
       }
-      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+      if (spotlightRef.current) {
+        spotlightRef.current.style.transform = `translate3d(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%), 0)`;
+      }
     };
     
     const handleMouseOver = (e) => {
@@ -188,7 +190,7 @@ function App() {
           <GlobalCanvas />
 
           {/* Global Mouse Follow Spotlight */}
-          <div className="spotlight-glow" aria-hidden="true"></div>
+          <div ref={spotlightRef} className="spotlight-glow" aria-hidden="true"></div>
 
           {/* Premium Screen Wipe Page Transition */}
           <PageTransition />
