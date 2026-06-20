@@ -41,10 +41,9 @@ const EducationCard = ({ item, idx, total }) => {
   });
 
   // Calculate dynamic scale-down effect as subsequent cards stack on top
-  const targetScale = 1 - (total - idx) * 0.03;
-  const scale = useTransform(scrollYProgress, [0, 1], [1, targetScale]);
-  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.7]);
-  const blur = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(2px)"]);
+  const targetScale = 1 - (total - idx) * 0.04;
+  const scale = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [1, 1, targetScale, targetScale]);
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [1, 1, 0.6, 0.6]);
 
   return (
     <motion.div 
@@ -63,7 +62,6 @@ const EducationCard = ({ item, idx, total }) => {
         WebkitBackdropFilter: 'blur(30px) saturate(180%)',
         scale,
         opacity,
-        filter: blur,
       }}
       initial={{ opacity: 0, y: 80 }}
       whileInView={{ opacity: 1, y: 0 }}
