@@ -42,28 +42,28 @@ const Services = () => {
         <div className="services-grid">
           {servicesData.map((service) => {
             const isExpanded = expandedId === service.id;
+            const delay = (service.id % 3) + 1;
 
             return (
               <div 
                 key={service.id}
                 onClick={() => setExpandedId(isExpanded ? null : service.id)}
-                className={`service-card glass-card ${isExpanded ? 'expanded' : ''}`}
+                className={`service-card glass-card reveal-item reveal-delay-${delay} ${isExpanded ? 'expanded' : ''}`}
                 style={{ 
                   cursor: 'pointer', 
-                  transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
                   height: 'fit-content'
                 }}
               >
-                <div className="service-icon">
+                <div className="service-icon reveal-item reveal-delay-1">
                   <i className={service.icon}></i>
                 </div>
-                <h3 className="service-title">{service.title}</h3>
-                <p className="service-description">
+                <h3 className="service-title reveal-item reveal-delay-2">{service.title}</h3>
+                <p className="service-description reveal-item reveal-delay-3">
                   {service.desc}
                 </p>
 
                 {/* Staggered lists */}
-                <div className="service-features" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="service-features reveal-item reveal-delay-4" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                   {service.features.map((feat) => (
                     <span key={feat}>
                       <i className="fa-solid fa-circle-check"></i> {feat}
