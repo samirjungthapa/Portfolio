@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { playClick } from './utils/audioManager';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import PageTransition from './components/PageTransition';
@@ -20,14 +21,68 @@ import GlobalCanvas from './components/GlobalCanvas';
 import Footer from './components/Footer';
 import LoadingScreen from './components/LoadingScreen';
 import CommandPalette from './components/CommandPalette';
+import ResumeModal from './components/ResumeModal';
+import VSCodeMode from './components/VSCodeMode';
+import PaintOverlay from './components/PaintOverlay';
+import SynthModal from './components/SynthModal';
+import AIAssistant from './components/AIAssistant';
 
 function App() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [scrollPercent, setScrollPercent] = useState(0);
   const [isMobile, setIsMobile] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [resumeOpen, setResumeOpen] = useState(false);
+  const [vsCodeOpen, setVsCodeOpen] = useState(false);
+  const [devMode, setDevMode] = useState(false);
+  const [crtActive, setCrtActive] = useState(false);
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const cursorRef = useRef(null);
   const spotlightRef = useRef(null);
+
+  useEffect(() => {
+    const handleOpenVSCode = () => {
+      setVsCodeOpen(true);
+    };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setVsCodeOpen(false);
+      }
+    };
+    window.addEventListener('open-vscode-mode', handleOpenVSCode);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('open-vscode-mode', handleOpenVSCode);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (devMode) {
+      document.documentElement.classList.add('dev-mode-active');
+    } else {
+      document.documentElement.classList.remove('dev-mode-active');
+    }
+  }, [devMode]);
+
+  useEffect(() => {
+    const handleOpenResume = () => {
+      setResumeOpen(true);
+    };
+    window.addEventListener('open-resume-modal', handleOpenResume);
+    return () => {
+      window.removeEventListener('open-resume-modal', handleOpenResume);
+    };
+  }, []);
 
   useEffect(() => {
     const checkDevice = () => {
@@ -181,6 +236,24 @@ function App() {
       {/* Raycast/Linear inspired Command Palette */}
       <CommandPalette />
 
+      {/* Retro CRT scanline screen filter overlay */}
+      {crtActive && <div className="crt-overlay" aria-hidden="true" />}
+
+      {/* Interactive CV viewer modal */}
+      <ResumeModal isOpen={resumeOpen} onClose={() => setResumeOpen(false)} />
+
+      {/* VS Code IDE editor overlay mode */}
+      <VSCodeMode isOpen={vsCodeOpen} onClose={() => setVsCodeOpen(false)} />
+
+      {/* Full-screen neon paint canvas overlay */}
+      <PaintOverlay />
+
+      {/* Playable Web Audio API synth modal */}
+      <SynthModal />
+
+      {/* Cybernetic AI Chatbot Assistant companion */}
+      <AIAssistant />
+
       {/* Letter-by-letter blur reveal load sequence */}
       <LoadingScreen onComplete={() => setIsLoading(false)} />
 
@@ -266,6 +339,8 @@ function App() {
 
           {/* Interactive Diagnostics Terminal Overlay */}
           <TerminalConsole />
+
+
         </SmoothScroll>
       )}
     </>

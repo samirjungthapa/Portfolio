@@ -49,6 +49,31 @@
     --transition-premium: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+html[data-theme="neon"] {
+    --accent-cyan: #ff007f;
+    --accent-blue: #9d00ff;
+    --accent-purple: #ff0055;
+    --border-color-hover: rgba(255, 0, 127, 0.3);
+    --glow-color: rgba(255, 0, 127, 0.15);
+}
+
+html[data-theme="emerald"] {
+    --accent-cyan: #10b981;
+    --accent-blue: #34d399;
+    --accent-purple: #047857;
+    --border-color-hover: rgba(16, 185, 129, 0.3);
+    --glow-color: rgba(16, 185, 129, 0.15);
+}
+
+html[data-theme="electric"] {
+    --accent-cyan: #00f2fe;
+    --accent-blue: #4facfe;
+    --accent-purple: #0072ff;
+    --border-color-hover: rgba(0, 242, 254, 0.3);
+    --glow-color: rgba(0, 242, 254, 0.15);
+}
+
+
 /* Procedural Noise Overlay */
 body::before {
     content: "";
@@ -5347,6 +5372,234 @@ button, input, textarea, select {
     from { transform: scale(0.96); opacity: 0; }
     to { transform: scale(1); opacity: 1; }
 }
+
+/* ==========================================================================
+   SENIOR DEVELOPER HERO SECTION UPGRADES
+   ========================================================================== */
+
+/* 1. Interactive Mouse-Glow Background Grid */
+.interactive-grid-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: radial-gradient(
+        600px circle at var(--mouse-x, 0px) var(--mouse-y, 0px),
+        rgba(201, 162, 39, 0.08),
+        transparent 80%
+    );
+    transition: background 0.1s ease;
+}
+
+/* 2. Glass Card Border Beam (Glowing Sweep) */
+.border-beam-active {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.border-beam-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    padding: 2px; /* border thickness */
+    background: conic-gradient(
+        from 0deg,
+        transparent 0%,
+        var(--accent-cyan) 25%,
+        var(--accent-blue) 50%,
+        transparent 75%
+    );
+    -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: borderBeamSweep 4s linear infinite;
+    z-index: 4;
+}
+
+@keyframes borderBeamSweep {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* 3. Image Load State & Shimmer Skeleton */
+.avatar-shimmer-skeleton {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.03) 25%,
+        rgba(255, 255, 255, 0.08) 50%,
+        rgba(255, 255, 255, 0.03) 75%
+      );
+      background-size: 200% 100%;
+      animation: skeletonShimmer 1.5s infinite linear;
+      z-index: 5;
+}
+
+@keyframes skeletonShimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.profile-img {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.profile-img.loading {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.profile-img.loaded {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* 4. Parallax Badge Wrapper positioning */
+.parallax-badge-wrapper {
+    position: absolute;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.badge-1-pos {
+    top: 15%;
+    left: -20px;
+}
+
+.badge-2-pos {
+    bottom: 15%;
+    right: -20px;
+}
+
+/* Override absolute placement on the actual badges to avoid conflict */
+.parallax-badge-wrapper .floating-badge {
+    position: relative;
+    top: auto;
+    left: auto;
+    bottom: auto;
+    right: auto;
+}
+
+/* ==========================================================================
+   PHASE 2 PREMIUM UPGRADES
+   ========================================================================== */
+
+/* 1. Typographic Glint Sweep Animation */
+.headline-glint {
+    background: linear-gradient(
+        120deg,
+        #ffffff 30%,
+        var(--accent-cyan) 45%,
+        var(--accent-blue) 55%,
+        #ffffff 70%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: headlineGlintAnim 8s linear infinite;
+}
+
+@keyframes headlineGlintAnim {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+/* 2. Dynamic Video Border Mask */
+.video-border-active {
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-border-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140%;
+    height: 140%;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Make sure inner elements stack correctly over video */
+.avatar-circle-outer.video-border-active::before {
+    z-index: 2;
+}
+
+.avatar-circle-inner {
+    position: relative;
+    z-index: 3;
+}
+
+/* ==========================================================================
+   CRT RETRO SCANLINE OVERLAY
+   ========================================================================== */
+.crt-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 100000;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.18) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+    background-size: 100% 4px, 3px 100%;
+}
+
+.crt-overlay::before {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: radial-gradient(circle, transparent 60%, rgba(0, 0, 0, 0.4) 130%);
+    z-index: 100001;
+    pointer-events: none;
+}
+
+.crt-overlay::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background: rgba(18, 16, 16, 0.08);
+    opacity: 0.15;
+    z-index: 100002;
+    pointer-events: none;
+    animation: crtFlicker 0.15s infinite;
+}
+
+@keyframes crtFlicker {
+    0% { opacity: 0.12; }
+    50% { opacity: 0.15; }
+    100% { opacity: 0.12; }
+}
+
+/* AI Chat Custom Scrollbar styling */
+.ai-chat-messages::-webkit-scrollbar {
+    width: 6px;
+}
+.ai-chat-messages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.01);
+}
+.ai-chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0, 242, 254, 0.2);
+    border-radius: 4px;
+}
+.ai-chat-messages::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-cyan);
+}
+
+
+
 
 
 
