@@ -213,7 +213,7 @@ const Projects = () => {
               <p>No active deployments under this sector.</p>
             </div>
           ) : (
-            filtered.map((proj, idx) => (
+            filtered.map((proj) => (
               <TiltCard
                 key={proj.id}
                 className="project-card-mockup reveal-item"

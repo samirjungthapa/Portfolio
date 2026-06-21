@@ -8,7 +8,8 @@ const actions = [
   { id: 'projects', label: 'Go to Projects', icon: 'fa-solid fa-laptop-code', shortcut: 'G P', action: 'scroll' },
   { id: 'github', label: 'Open GitHub Profile', icon: 'fa-brands fa-github', shortcut: 'O G', action: 'url', url: 'https://github.com/samirjungthapa' },
   { id: 'linkedin', label: 'Open LinkedIn Profile', icon: 'fa-brands fa-linkedin', shortcut: 'O L', action: 'url', url: 'https://www.linkedin.com/in/samir-jung-thapa-21aaa83b6' },
-  { id: 'resume', label: 'Download Resume (Print/PDF)', icon: 'fa-solid fa-file-pdf', shortcut: 'D R', action: 'url', url: 'assets/resume.html' },
+  { id: 'resume', label: 'View Resume (Interactive/Print)', icon: 'fa-solid fa-file-pdf', shortcut: 'D R', action: 'custom' },
+  { id: 'vscode', label: 'Open VS Code Mode (Mock IDE Editor)', icon: 'fa-solid fa-code', shortcut: 'O V', action: 'custom' },
   { id: 'contact', label: 'Go to Contact', icon: 'fa-solid fa-paper-plane', shortcut: 'G C', action: 'scroll' }
 ];
 
@@ -17,6 +18,36 @@ const CommandPalette = () => {
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
+
+  const filtered = actions.filter((act) =>
+    act.label.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const triggerAction = (item) => {
+    setIsOpen(false);
+    if (item.action === 'scroll') {
+      const target = document.getElementById(item.id);
+      if (target) {
+        // Dispatch page transition event
+        window.dispatchEvent(new CustomEvent('page-transition-trigger'));
+        setTimeout(() => {
+          if (window.lenis) {
+            window.lenis.scrollTo(target, { offset: -80, immediate: true });
+          } else {
+            target.scrollIntoView({ behavior: 'auto', block: 'start' });
+          }
+        }, 350);
+      }
+    } else if (item.action === 'url') {
+      window.open(item.url, '_blank');
+    } else if (item.action === 'custom') {
+      if (item.id === 'resume') {
+        window.dispatchEvent(new CustomEvent('open-resume-modal'));
+      } else if (item.id === 'vscode') {
+        window.dispatchEvent(new CustomEvent('open-vscode-mode'));
+      }
+    }
+  };
 
   // Key listeners
   useEffect(() => {
@@ -48,7 +79,7 @@ const CommandPalette = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, search, selectedIndex]);
+  }, [isOpen, search, selectedIndex, filtered]);
 
   // Autofocus input when palette opens
   useEffect(() => {
@@ -58,30 +89,6 @@ const CommandPalette = () => {
       }, 100);
     }
   }, [isOpen]);
-
-  const filtered = actions.filter((act) =>
-    act.label.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const triggerAction = (item) => {
-    setIsOpen(false);
-    if (item.action === 'scroll') {
-      const target = document.getElementById(item.id);
-      if (target) {
-        // Dispatch page transition event
-        window.dispatchEvent(new CustomEvent('page-transition-trigger'));
-        setTimeout(() => {
-          if (window.lenis) {
-            window.lenis.scrollTo(target, { offset: -80, immediate: true });
-          } else {
-            target.scrollIntoView({ behavior: 'auto', block: 'start' });
-          }
-        }, 350);
-      }
-    } else if (item.action === 'url') {
-      window.open(item.url, '_blank');
-    }
-  };
 
   return (
     <AnimatePresence>
