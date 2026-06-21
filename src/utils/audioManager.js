@@ -1,12 +1,27 @@
 let isMuted = true;
 
+let audioCtx = null;
+
 const getAudioContext = () => {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  return AudioContext ? new AudioContext() : null;
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      audioCtx = new AudioContext();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume().catch((e) => console.warn("Failed to resume AudioContext:", e));
+  }
+  return audioCtx;
 };
 
 export const setMuteState = (state) => {
   isMuted = state;
+  if (isMuted) {
+    stopAmbientSoundtrack();
+  } else {
+    startAmbientSoundtrack();
+  }
 };
 
 // Spatialized Click with Panning (x: -1 to 1) and Pitch Modulation (y: -1 to 1)
@@ -104,4 +119,81 @@ export const playSuccess = () => {
   osc2.start();
   osc1.stop(ctx.currentTime + 0.4);
   osc2.stop(ctx.currentTime + 0.4);
+};
+
+let ambientInterval = null;
+let ambientNodes = [];
+
+export const startAmbientSoundtrack = () => {
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  stopAmbientSoundtrack();
+
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(320, ctx.currentTime);
+  filter.connect(ctx.destination);
+
+  const chords = [
+    [130.81, 164.81, 196.00, 246.94], // C3 Major 7th (C, E, G, B)
+    [146.83, 174.61, 220.00, 261.63], // D3 Minor 7th (D, F, A, C)
+    [174.61, 220.00, 261.63, 329.63]  // F3 Major 7th (F, A, C, E)
+  ];
+  let chordIndex = 0;
+
+  const playChord = () => {
+    if (isMuted) return;
+    const activeChord = chords[chordIndex];
+    chordIndex = (chordIndex + 1) % chords.length;
+
+    activeChord.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const gainNode = ctx.createGain();
+
+      osc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+
+      const now = ctx.currentTime;
+      gainNode.gain.setValueAtTime(0, now);
+      gainNode.gain.linearRampToValueAtTime(0.015, now + 4);
+      gainNode.gain.setValueAtTime(0.015, now + 12);
+      gainNode.gain.exponentialRampToValueAtTime(0.0001, now + 16);
+
+      osc.connect(gainNode);
+      gainNode.connect(filter);
+
+      osc.start(now);
+      osc.stop(now + 16.1);
+
+      ambientNodes.push({ osc, gainNode });
+    });
+
+    setTimeout(() => {
+      ambientNodes = ambientNodes.filter(n => n.osc.context.currentTime < n.osc.context.currentTime + 17);
+    }, 18000);
+  };
+
+  playChord();
+  ambientInterval = setInterval(playChord, 14000);
+};
+
+export const stopAmbientSoundtrack = () => {
+  if (ambientInterval) {
+    clearInterval(ambientInterval);
+    ambientInterval = null;
+  }
+  ambientNodes.forEach(({ osc, gainNode }) => {
+    try {
+      const ctx = getAudioContext();
+      if (ctx) {
+        gainNode.gain.cancelScheduledValues(ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 1.2);
+        osc.stop(ctx.currentTime + 1.3);
+      } else {
+        osc.stop();
+      }
+    } catch (e) {}
+  });
+  ambientNodes = [];
 };
