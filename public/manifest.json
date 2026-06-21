@@ -1,0 +1,17 @@
+{
+  "short_name": "SamirDev",
+  "name": "Samir Jung Thapa | Frontend Developer",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#050505",
+  "theme_color": "#C9A227",
+  "display": "standalone",
+  "orientation": "portrait"
+}
