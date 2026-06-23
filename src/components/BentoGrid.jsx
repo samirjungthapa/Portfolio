@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const focusTechs = [
   { name: 'Next.js', level: 'Routing & SSR' },
@@ -18,6 +19,125 @@ const coreTechs = [
 ];
 
 const BentoGrid = () => {
+  const [timeStr, setTimeStr] = useState('');
+  const [status, setStatus] = useState('');
+  const [timeOfDay, setTimeOfDay] = useState('night'); // morning, day, sunset, night
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date();
+      
+      const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Kathmandu',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+      
+      const parts = formatter.formatToParts(now);
+      const hourPart = parts.find(p => p.type === 'hour').value;
+      const minutePart = parts.find(p => p.type === 'minute').value;
+      const secondPart = parts.find(p => p.type === 'second').value;
+      const dayPeriodPart = parts.find(p => p.type === 'dayPeriod')?.value || 'AM';
+      
+      setTimeStr(`${hourPart}:${minutePart}:${secondPart} ${dayPeriodPart}`);
+      
+      let hour24 = parseInt(hourPart, 10);
+      if (dayPeriodPart === 'PM' && hour24 !== 12) hour24 += 12;
+      if (dayPeriodPart === 'AM' && hour24 === 12) hour24 = 0;
+
+      if (hour24 >= 9 && hour24 < 17) {
+        setStatus('Focus & Productivity Mode 🚀');
+        setTimeOfDay('day');
+      } else if (hour24 >= 17 && hour24 < 23) {
+        setStatus('Designing & Coding 💻');
+        setTimeOfDay('sunset');
+      } else if (hour24 >= 23 || hour24 < 6) {
+        setStatus('Recharging / In Sleep State 😴');
+        setTimeOfDay('night');
+      } else {
+        setStatus('Morning Coffee & Planning ☕');
+        setTimeOfDay('morning');
+      }
+    };
+
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getBackgroundGradient = () => {
+    switch (timeOfDay) {
+      case 'morning':
+        return 'linear-gradient(135deg, rgba(254, 180, 123, 0.08) 0%, rgba(255, 126, 95, 0.03) 100%)';
+      case 'day':
+        return 'linear-gradient(135deg, rgba(0, 242, 254, 0.06) 0%, rgba(79, 172, 254, 0.03) 100%)';
+      case 'sunset':
+        return 'linear-gradient(135deg, rgba(201, 162, 39, 0.08) 0%, rgba(157, 0, 255, 0.04) 100%)';
+      case 'night':
+      default:
+        return 'linear-gradient(135deg, rgba(157, 0, 255, 0.04) 0%, rgba(3, 3, 5, 0.6) 100%)';
+    }
+  };
+
+  const getAccentColor = () => {
+    switch (timeOfDay) {
+      case 'morning':
+        return '#FEB47B';
+      case 'day':
+        return '#00f2fe';
+      case 'sunset':
+        return '#C9A227';
+      case 'night':
+      default:
+        return '#9d00ff';
+    }
+  };
+
+  const renderIcon = () => {
+    const color = getAccentColor();
+    switch (timeOfDay) {
+      case 'morning':
+        return (
+          <motion.div
+            animate={{ y: [0, -4, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          >
+            <i className="fa-solid fa-mug-hot" style={{ color, fontSize: '1.8rem' }}></i>
+          </motion.div>
+        );
+      case 'day':
+        return (
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 25, ease: 'linear' }}
+          >
+            <i className="fa-solid fa-sun" style={{ color, fontSize: '2rem' }}></i>
+          </motion.div>
+        );
+      case 'sunset':
+        return (
+          <motion.div
+            animate={{ scale: [1, 1.05, 1] }}
+            transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+          >
+            <i className="fa-solid fa-cloud-sun" style={{ color, fontSize: '2rem' }}></i>
+          </motion.div>
+        );
+      case 'night':
+      default:
+        return (
+          <motion.div
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
+          >
+            <i className="fa-solid fa-moon" style={{ color, fontSize: '1.8rem' }}></i>
+          </motion.div>
+        );
+    }
+  };
+
   return (
     <section id="dashboard" className="bento-section scroll-reveal" style={{ padding: '80px 0', borderTop: '1px solid rgba(255,255,255,0.03)' }}>
       <div className="container">
@@ -180,8 +300,6 @@ const BentoGrid = () => {
           </motion.div>
         </div>
       </div>
-      
-      {/* Bento Responsive overrides inside index.css */}
     </section>
   );
 };
