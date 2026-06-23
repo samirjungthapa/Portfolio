@@ -275,27 +275,55 @@ const BentoGrid = () => {
             </div>
           </motion.div>
 
-          {/* Item 4: Experience Highlight Card */}
+          {/* Item 4: Live Nepal Time Widget */}
           <motion.div 
-            whileHover={{ y: -4, borderColor: 'var(--accent-cyan)' }}
+            whileHover={{ y: -4, borderColor: getAccentColor() }}
             className="glass-card bento-card"
             style={{
               padding: '36px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
-              minHeight: '220px'
+              border: `1px solid rgba(255, 255, 255, 0.08)`,
+              minHeight: '220px',
+              background: getBackgroundGradient(),
+              transition: 'background 0.5s ease, border-color 0.3s ease'
             }}
           >
-            <div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>[Log metrics]</span>
-              <h3 style={{ fontSize: '1.4rem', fontWeight: '800', marginTop: '8px', color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>Experience</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>[Local Timezone]</span>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: '800', marginTop: '8px', color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>Nepal Standard</h3>
+              </div>
+              {renderIcon()}
             </div>
 
             <div>
-              <div style={{ fontSize: '1.1rem', fontWeight: '700', color: 'var(--text-primary)' }}>Freelance Developer</div>
-              <div style={{ fontSize: '0.8rem', color: 'var(--accent-cyan)', marginTop: '2px' }}>2024 – Present (2+ Years)</div>
+              <div 
+                style={{ 
+                  fontSize: '1.8rem', 
+                  fontWeight: '800', 
+                  color: 'var(--text-primary)', 
+                  fontFamily: 'monospace',
+                  letterSpacing: '1px',
+                  textShadow: `0 0 10px ${getAccentColor()}44`
+                }}
+              >
+                {timeStr || '--:--:-- --'}
+              </div>
+              <div 
+                style={{ 
+                  fontSize: '0.78rem', 
+                  color: 'var(--text-muted)', 
+                  marginTop: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: getAccentColor(), display: 'inline-block', boxShadow: `0 0 8px ${getAccentColor()}` }}></span>
+                {status}
+              </div>
             </div>
           </motion.div>
         </div>
