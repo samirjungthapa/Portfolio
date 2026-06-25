@@ -2,17 +2,60 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 // Seeded pseudorandom level generator for the 371 days contribution grid mockup
+const isNameCell = (r, c) => {
+  const col = c - 12;
+  if (col < 0 || col >= 29) return false;
+  
+  if (col >= 0 && col < 5) {
+    const cc = col;
+    if (r === 0 || r === 3 || r === 6) return cc > 0 && cc < 4;
+    if (r === 1 || r === 5) return cc === 0 || cc === 4;
+    if (r === 2) return cc === 0;
+    if (r === 4) return cc === 4;
+  }
+  if (col >= 6 && col < 11) {
+    const cc = col - 6;
+    if (r === 0) return cc === 2;
+    if (r === 1) return cc === 1 || cc === 3;
+    if (r === 3) return true;
+    return cc === 0 || cc === 4;
+  }
+  if (col >= 12 && col < 17) {
+    const cc = col - 12;
+    if (r === 0) return cc === 0 || cc === 4;
+    if (r === 1) return cc === 0 || cc === 1 || cc === 3 || cc === 4;
+    if (r === 2) return cc === 0 || cc === 2 || cc === 4;
+    return cc === 0 || cc === 4;
+  }
+  if (col >= 18 && col < 23) {
+    const cc = col - 18;
+    if (r === 0 || r === 6) return true;
+    return cc === 2;
+  }
+  if (col >= 24 && col < 29) {
+    const cc = col - 24;
+    if (r === 0 || r === 3) return cc < 4;
+    if (r === 1 || r === 2) return cc === 0 || cc === 4;
+    if (r === 4) return cc === 0 || cc === 2;
+    if (r === 5) return cc === 0 || cc === 3;
+    if (r === 6) return cc === 0 || cc === 4;
+  }
+  return false;
+};
+
 const generateContributions = () => {
   const contributions = [];
-  const levels = [0, 0, 0, 1, 1, 2, 2, 3, 4];
   for (let i = 0; i < 371; i++) {
-    const dayOfWeek = i % 7;
-    const isMidweek = dayOfWeek >= 1 && dayOfWeek <= 4;
-    const levelIndex = Math.floor(Math.random() * levels.length);
-    let level = levels[levelIndex];
-    if (isMidweek && level === 0 && Math.random() > 0.4) {
-      level = 1;
+    const r = Math.floor(i / 53);
+    const c = i % 53;
+    
+    let level = 0;
+    if (isNameCell(r, c)) {
+      level = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
+    } else {
+      level = 0;
     }
+    
     contributions.push({
       day: i,
       level,
