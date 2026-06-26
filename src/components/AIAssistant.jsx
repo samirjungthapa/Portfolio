@@ -27,6 +27,10 @@ const AIAssistant = () => {
   const [inputVal, setInputVal] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [apiKey, setApiKey] = useState(() => localStorage.getItem('portfolio-gemini-key') || '');
+  const [showKeySettings, setShowKeySettings] = useState(false);
+  const [inputKey, setInputKey] = useState('');
+  
   const chatEndRef = useRef(null);
   const speechSynthRef = useRef(null);
 
@@ -48,7 +52,23 @@ const AIAssistant = () => {
     window.speechSynthesis.speak(utterance);
   };
 
-  const handleSendMessage = (text) => {
+  const handleSaveApiKey = () => {
+    try { playSuccess(); } catch (e) {}
+    setApiKey(inputKey);
+    localStorage.setItem('portfolio-gemini-key', inputKey);
+    setShowKeySettings(false);
+    setInputKey('');
+    setMessages((prev) => [
+      ...prev,
+      {
+        sender: 'bot',
+        text: inputKey ? 'SYSTEM: Gemini API Key successfully saved and integrated. Dynamic AI mode active!' : 'SYSTEM: API Key cleared. Running in standard local simulation mode.',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      }
+    ]);
+  };
+
+  const handleSendMessage = async (text) => {
     if (!text.trim()) return;
     
     const userTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -81,48 +101,74 @@ const AIAssistant = () => {
       }
     }
 
-    // Get matching response text
-    let responseText = BOT_DATA.fallback;
-    if (actionTriggered === 'vscode') responseText = BOT_DATA.vscode;
-    else if (actionTriggered === 'projects') responseText = BOT_DATA.projects;
-    else if (actionTriggered === 'contact') responseText = BOT_DATA.contact;
-    else if (actionTriggered) responseText = `Acknowledged. Re-focusing viewport layout on the ${actionTriggered} section...`;
-    else if (query.includes('who') || query.includes('samir') || query.includes('about')) responseText = BOT_DATA.who;
-    else if (query.includes('skill') || query.includes('stack') || query.includes('code')) responseText = BOT_DATA.skills;
+    let responseText = '';
+
+    if (apiKey) {
+      try {
+        const sysInstruction = `You are the professional AI Assistant for Samir Jung Thapa's online portfolio.
+Samir is a computing student at Itahari International College and a creative Frontend Developer based in Nepal.
+Stack: React, Three.js, GSAP, TailwindCSS, Node.js, Express, Java, SQLite, REST APIs.
+Email: Samirjungthapa7@gmail.com. Phone: 9822434711. LinkedIn: linkedin.com/in/samir-jung-thapa-21aaa83b6.
+Keep responses concise (2-3 sentences max) and themed like a high-tech system console log. Avoid bullet points if possible.`;
+
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: `${sysInstruction}\n\nUser Question: ${text}` }] }]
+            })
+          }
+        );
+        const data = await res.json();
+        responseText = data.candidates?.[0]?.content?.parts?.[0]?.text || 'SYSTEM_ERR: Failed to parse Gemini response payload.';
+      } catch (err) {
+        responseText = `SYSTEM_ERR: Connection to Gemini API failed. Falling back to local index. Detail: ${err.message}`;
+      }
+    }
+
+    if (!responseText) {
+      // Fallback: Get matching local response text
+      responseText = BOT_DATA.fallback;
+      if (actionTriggered === 'vscode') responseText = BOT_DATA.vscode;
+      else if (actionTriggered === 'projects') responseText = BOT_DATA.projects;
+      else if (actionTriggered === 'contact') responseText = BOT_DATA.contact;
+      else if (actionTriggered) responseText = `Acknowledged. Re-focusing viewport layout on the ${actionTriggered} section...`;
+      else if (query.includes('who') || query.includes('samir') || query.includes('about')) responseText = BOT_DATA.who;
+      else if (query.includes('skill') || query.includes('stack') || query.includes('code')) responseText = BOT_DATA.skills;
+    }
 
     // Simulate streaming text response
-    setTimeout(() => {
-      setIsTyping(false);
-      const botTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      
-      // Initialize an empty message and stream text character by character
-      const words = responseText.split(' ');
-      let currentText = '';
-      let wordIdx = 0;
-      
-      setMessages((prev) => [...prev, { sender: 'bot', text: '', time: botTimestamp, isStreaming: true }]);
+    setIsTyping(false);
+    const botTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    // Initialize an empty message and stream text character by character
+    const words = responseText.split(' ');
+    let currentText = '';
+    let wordIdx = 0;
+    
+    setMessages((prev) => [...prev, { sender: 'bot', text: '', time: botTimestamp, isStreaming: true }]);
 
-      const interval = setInterval(() => {
-        if (wordIdx < words.length) {
-          currentText += (wordIdx === 0 ? '' : ' ') + words[wordIdx];
-          setMessages((prev) => {
-            const updated = [...prev];
-            updated[updated.length - 1] = {
-              sender: 'bot',
-              text: currentText,
-              time: botTimestamp,
-              isStreaming: wordIdx < words.length - 1
-            };
-            return updated;
-          });
-          wordIdx++;
-        } else {
-          clearInterval(interval);
-          playSuccess();
-        }
-      }, 55);
-
-    }, 850);
+    const interval = setInterval(() => {
+      if (wordIdx < words.length) {
+        currentText += (wordIdx === 0 ? '' : ' ') + words[wordIdx];
+        setMessages((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            sender: 'bot',
+            text: currentText,
+            time: botTimestamp,
+            isStreaming: wordIdx < words.length - 1
+          };
+          return updated;
+        });
+        wordIdx++;
+      } else {
+        clearInterval(interval);
+        playSuccess();
+      }
+    }, 45);
   };
 
   return (
@@ -204,10 +250,95 @@ const AIAssistant = () => {
             </div>
 
             {/* Neural Telemetry Monitor */}
-            <div style={{ padding: '4px 16px', background: 'rgba(0, 242, 254, 0.03)', borderBottom: '1px solid rgba(0, 242, 254, 0.08)', display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', opacity: 0.8 }}>
+            <div style={{ padding: '4px 16px', background: 'rgba(0, 242, 254, 0.03)', borderBottom: '1px solid rgba(0, 242, 254, 0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.6rem', fontFamily: 'var(--font-mono)', color: 'var(--accent-cyan)', opacity: 0.8 }}>
               <span>MEM_LOAD: 14.8%</span>
-              <span>COMPUTE: DYNAMIC_LLM</span>
+              <div 
+                onClick={(e) => { 
+                  e.stopPropagation();
+                  try { playClick(); } catch(err) {}
+                  setShowKeySettings(prev => !prev); 
+                }}
+                style={{ 
+                  cursor: 'pointer', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '4.5px', 
+                  color: apiKey ? '#10b981' : 'var(--accent-cyan)',
+                  position: 'relative',
+                  zIndex: 1060,
+                  pointerEvents: 'auto',
+                  background: 'rgba(0, 242, 254, 0.05)',
+                  padding: '4px 8px',
+                  borderRadius: '4px',
+                  border: apiKey ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(0, 242, 254, 0.2)',
+                  userSelect: 'none'
+                }}
+              >
+                <i className="fa-solid fa-gear" style={{ fontSize: '0.65rem' }}></i>
+                <span>{apiKey ? 'GEMINI: ON' : 'GEMINI: OFF'}</span>
+              </div>
             </div>
+
+            {/* Settings Overlay for API Key */}
+            {showKeySettings && (
+              <div style={{
+                position: 'absolute',
+                top: '90px',
+                left: '16px',
+                right: '16px',
+                background: 'rgba(10, 10, 15, 0.98)',
+                border: '1px solid var(--accent-cyan)',
+                borderRadius: '8px',
+                padding: '16px',
+                zIndex: 1100,
+                pointerEvents: 'auto',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.8)'
+              }}>
+                <h4 style={{ fontSize: '0.75rem', color: 'var(--text-primary)', marginBottom: '8px', fontFamily: 'var(--font-mono)' }}>[GEMINI_API_CONFIG]</h4>
+                <p style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginBottom: '12px', lineHeight: '1.4' }}>
+                  Paste a client-side Gemini API key to activate dynamic conversations. Keys are saved strictly in your local storage.
+                </p>
+                <input 
+                  type="password" 
+                  placeholder="Paste AI key here..." 
+                  value={inputKey} 
+                  onChange={(e) => setInputKey(e.target.value)} 
+                  style={{
+                    width: '100%',
+                    fontSize: '0.75rem',
+                    color: 'var(--text-primary)',
+                    fontFamily: 'var(--font-mono)',
+                    padding: '8px 10px',
+                    background: 'rgba(255,255,255,0.02)',
+                    borderRadius: '4px',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    marginBottom: '12px',
+                    outline: 'none'
+                  }}
+                />
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button 
+                    type="button"
+                    onClick={handleSaveApiKey}
+                    className="btn btn-sm btn-primary"
+                    style={{ flex: 1, padding: '6px', fontSize: '0.65rem', borderRadius: '4px', cursor: 'pointer', textAlign: 'center', background: 'var(--accent-gradient)', color: '#050505', fontWeight: 'bold' }}
+                  >
+                    Save Key
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => { 
+                      try { playClick(); } catch (e) {}
+                      setShowKeySettings(false); 
+                    }}
+                    className="btn btn-sm btn-secondary"
+                    style={{ flex: 1, padding: '6px', fontSize: '0.65rem', borderRadius: '4px', cursor: 'pointer', textAlign: 'center', border: '1px solid rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Message Thread */}
             <div 
