@@ -227,6 +227,7 @@ const RetroSnake = () => {
 };
 
 const VSCodeMode = ({ isOpen, onClose }) => {
+  const [editableFiles, setEditableFiles] = useState(files);
   const [activeFile, setActiveFile] = useState('about.json');
   const [openTabs, setOpenTabs] = useState(['about.json']);
 
@@ -310,7 +311,7 @@ const VSCodeMode = ({ isOpen, onClose }) => {
                   <i className="fa-solid fa-chevron-down" style={{ fontSize: '0.6rem' }}></i> PORTFOLIO
                 </span>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', paddingLeft: '16px' }}>
-                  {Object.keys(files).map((filename) => {
+                  {Object.keys(editableFiles).map((filename) => {
                     const isJS = filename.endsWith('.js');
                     const isActive = activeFile === filename;
                     return (
@@ -387,19 +388,40 @@ const VSCodeMode = ({ isOpen, onClose }) => {
                   <RetroSnake />
                 </div>
               ) : (
-                <div style={{ flexGrow: 1, padding: '20px', overflowY: 'auto', display: 'flex', gap: '16px' }}>
+                <div style={{ flexGrow: 1, padding: '20px', display: 'flex', gap: '16px', height: 'calc(100% - 35px)', overflow: 'hidden' }}>
                   {/* Line Numbers column */}
-                  <div style={{ color: '#858585', textAlign: 'right', userSelect: 'none', fontSize: '0.8rem', display: 'flex', flexDirection: 'column', gap: '3.6px' }}>
-                    {files[activeFile].split('\n').map((_, idx) => (
-                      <div key={idx}>{idx + 1}</div>
+                  <div style={{ color: '#858585', textAlign: 'right', userSelect: 'none', fontSize: '0.82rem', display: 'flex', flexDirection: 'column', fontFamily: 'var(--font-mono)', lineHeight: '1.45' }}>
+                    {editableFiles[activeFile].split('\n').map((_, idx) => (
+                      <div key={idx} style={{ height: '1.45em' }}>{idx + 1}</div>
                     ))}
                   </div>
-                  {/* Syntax Highlighted editor block */}
-                  <pre style={{ margin: 0, padding: 0, color: '#9cdcfe', fontSize: '0.82rem', fontFamily: 'var(--font-mono)', lineHeight: '1.45', tabSize: 2, whiteSpace: 'pre-wrap' }}>
-                    <code>
-                      {files[activeFile]}
-                    </code>
-                  </pre>
+                  {/* Textarea Code Editor */}
+                  <textarea
+                    value={editableFiles[activeFile]}
+                    onChange={(e) => {
+                      const updated = { ...editableFiles, [activeFile]: e.target.value };
+                      setEditableFiles(updated);
+                      // Dispatch update event
+                      window.dispatchEvent(new CustomEvent('portfolio-live-update', {
+                        detail: { files: updated }
+                      }));
+                    }}
+                    style={{
+                      flexGrow: 1,
+                      background: 'transparent',
+                      border: 'none',
+                      outline: 'none',
+                      color: '#9cdcfe',
+                      fontSize: '0.82rem',
+                      fontFamily: 'var(--font-mono)',
+                      lineHeight: '1.45',
+                      resize: 'none',
+                      height: '100%',
+                      width: '100%',
+                      padding: 0,
+                      margin: 0
+                    }}
+                  />
                 </div>
               )}
             </div>

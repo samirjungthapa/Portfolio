@@ -2,15 +2,17 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import Magnetic from './Magnetic';
 
-const subtitles = [
-  "Frontend Developer",
-  "Computing Student",
-  "Freelancer",
-  "React Developer",
-  "UI/UX Enthusiast"
-];
 
 const Hero = () => {
+  const [name, setName] = useState("Samir Jung Thapa");
+  const [subtitles, setSubtitles] = useState([
+    "Frontend Developer",
+    "Computing Student",
+    "Freelancer",
+    "React Developer",
+    "UI/UX Enthusiast"
+  ]);
+  const [description, setDescription] = useState("A passionate Frontend Developer and B.Sc. (Hons) Computing student from Nepal. I craft modern, responsive, and user-friendly web experiences using React, JavaScript, and cutting-edge CSS.");
   const [index, setIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
   const sectionRef = useRef(null);
@@ -27,6 +29,26 @@ const Hero = () => {
 
   const rectRef = useRef(null);
 
+  // Live updates listener
+  useEffect(() => {
+    const handleLiveUpdate = (e) => {
+      const { files } = e.detail;
+      if (files['about.json']) {
+        try {
+          const aboutData = JSON.parse(files['about.json']);
+          if (aboutData.name) setName(aboutData.name);
+          if (aboutData.role) {
+            setSubtitles([aboutData.role, ...(aboutData.interests || [])]);
+          }
+        } catch (err) {
+          console.warn("Failed to parse live updated about.json:", err);
+        }
+      }
+    };
+    window.addEventListener('portfolio-live-update', handleLiveUpdate);
+    return () => window.removeEventListener('portfolio-live-update', handleLiveUpdate);
+  }, []);
+
   // Rotate roles every 3 seconds
   useEffect(() => {
     const timer = setInterval(() => {
@@ -34,7 +56,7 @@ const Hero = () => {
     }, 3000);
     setIsLoaded(true);
     return () => clearInterval(timer);
-  }, []);
+  }, [subtitles.length]);
 
   const handleMouseEnter3D = (e) => {
     rectRef.current = e.currentTarget.getBoundingClientRect();
@@ -61,7 +83,7 @@ const Hero = () => {
   };
 
   // Headline split characters
-  const headlineWords = "Samir Jung Thapa".split(" ");
+  const headlineWords = name.split(" ");
 
   return (
     <section id="home" ref={sectionRef} className="hero-section hero-spotlight">
