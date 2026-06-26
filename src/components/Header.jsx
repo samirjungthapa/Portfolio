@@ -7,7 +7,10 @@ const themes = [
   { id: 'gold', name: 'Gold Horizon', icon: 'fa-sun' },
   { id: 'neon', name: 'Cyberpunk', icon: 'fa-bolt' },
   { id: 'emerald', name: 'Matrix', icon: 'fa-terminal' },
-  { id: 'electric', name: 'Electric Void', icon: 'fa-droplet' }
+  { id: 'electric', name: 'Electric Void', icon: 'fa-droplet' },
+  { id: 'dracula', name: 'Dracula', icon: 'fa-ghost' },
+  { id: 'monokai', name: 'Monokai', icon: 'fa-cubes' },
+  { id: 'light', name: 'Minimal Light', icon: 'fa-circle-half-stroke' }
 ];
 
 const Header = () => {
