@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
+import CyberArcadeGame from './CyberArcadeGame';
+
 
 const focusTechs = [
   { name: 'Next.js', level: 'Routing & SSR' },
@@ -324,6 +326,33 @@ const BentoGrid = () => {
                 <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: getAccentColor(), display: 'inline-block', boxShadow: `0 0 8px ${getAccentColor()}` }}></span>
                 {status}
               </div>
+            </div>
+          </motion.div>
+
+          {/* Item 5: Cyber Terminal Arcade Game (Full Width at bottom of dashboard) */}
+          <motion.div
+            whileHover={{ y: -4, borderColor: 'var(--accent-cyan)' }}
+            className="glass-card bento-card"
+            style={{
+              gridColumn: 'span 3',
+              padding: '36px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              border: '1px solid rgba(255,255,255,0.08)',
+              minHeight: '440px'
+            }}
+          >
+            <div style={{ marginBottom: '20px' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>[Core Entertainment Module]</span>
+              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginTop: '8px', color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>Interactive Cyber Arcade</h3>
+              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                Test your reflexes against neural networks debris. Interactive vector asteroid simulator running on local thread.
+              </p>
+            </div>
+            
+            <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+              <CyberArcadeGame />
             </div>
           </motion.div>
         </div>
