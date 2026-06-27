@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { setMuteState, playSpatialClick, playSpatialHover, playClick, playHover } from '../utils/audioManager';
+import { setMuteState, playSpatialClick, playSpatialHover, playClick, playHover, playThemeSound } from '../utils/audioManager';
 import Magnetic from './Magnetic';
 
 const themes = [
@@ -10,8 +10,10 @@ const themes = [
   { id: 'electric', name: 'Electric Void', icon: 'fa-droplet' },
   { id: 'dracula', name: 'Dracula', icon: 'fa-ghost' },
   { id: 'monokai', name: 'Monokai', icon: 'fa-cubes' },
-  { id: 'light', name: 'Minimal Light', icon: 'fa-circle-half-stroke' }
+  { id: 'light', name: 'Minimal Light', icon: 'fa-circle-half-stroke' },
+  { id: 'brutalist', name: 'Neo-Brutalism', icon: 'fa-shapes' }
 ];
+
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -201,7 +203,7 @@ const Header = () => {
                 <button
                   key={t.id}
                   onClick={() => {
-                    playClick();
+                    playThemeSound(t.id);
                     setCurrentTheme(t.id);
                     setShowThemeDropdown(false);
                   }}
