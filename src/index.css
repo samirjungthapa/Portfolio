@@ -126,6 +126,32 @@ html[data-theme="light"] {
     --glass-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
+html[data-theme="brutalist"] {
+    --bg-primary: #FFDE4D; /* Vibrant Brutalist Yellow */
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #FFDE4D;
+    --accent-cyan: #ff3366; /* Bold Brutalist Pink */
+    --accent-blue: #3355ff; /* Bold Brutalist Blue */
+    --accent-purple: #000000;
+    --border-color: #000000;
+    --border-color-hover: #000000;
+    --glow-color: transparent;
+    --glass-bg: #ffffff;
+    --glass-bg-hover: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #1a1a1a;
+    --text-muted: #2d2d2d;
+    --glass-border: 3px solid #000000;
+    --glass-shadow: 6px 6px 0px #000000;
+    --radius-xl: 0px;
+    --radius-lg: 0px;
+    --radius-md: 0px;
+    --radius-sm: 0px;
+    --font-heading: 'JetBrains Mono', monospace;
+    --font-body: 'JetBrains Mono', monospace;
+}
+
+
 
 
 /* Procedural Noise Overlay */
