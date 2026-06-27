@@ -22,6 +22,14 @@ const TerminalConsole = () => {
   const [snakeScore, setSnakeScore] = useState(0);
   const [snakeGameOver, setSnakeGameOver] = useState(false);
 
+  const restartSnake = () => {
+    setSnake([[10, 6], [10, 7], [10, 8]]);
+    setFood([5, 4]);
+    setDir([0, -1]);
+    setSnakeScore(0);
+    setSnakeGameOver(false);
+  };
+
   useEffect(() => {
     // Scroll to terminal bottom on history updates
     if (bottomRef.current) {
@@ -334,13 +342,6 @@ const TerminalConsole = () => {
     return grid.join('\n');
   };
 
-  const restartSnake = () => {
-    setSnake([[10, 6], [10, 7], [10, 8]]);
-    setFood([5, 4]);
-    setDir([0, -1]);
-    setSnakeScore(0);
-    setSnakeGameOver(false);
-  };
 
   return (
     <>

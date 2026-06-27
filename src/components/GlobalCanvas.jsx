@@ -146,6 +146,7 @@ const GlobalCanvas = () => {
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+      if (document.hidden) return;
       
       const time = clock.getElapsedTime();
       const posAttr = geometry.attributes.position;

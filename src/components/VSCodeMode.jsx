@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playClick, playSuccess, playHover } from '../utils/audioManager';
+import { playClick, playSuccess } from '../utils/audioManager';
 
 const files = {
   'about.json': `{
