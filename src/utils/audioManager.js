@@ -193,7 +193,62 @@ export const stopAmbientSoundtrack = () => {
       } else {
         osc.stop();
       }
-    } catch (e) {}
+    } catch {
+      // Ignore errors
+    }
   });
   ambientNodes = [];
 };
+
+export const playThemeSound = (themeId) => {
+  if (isMuted) return;
+  const ctx = getAudioContext();
+  if (!ctx) return;
+
+  const now = ctx.currentTime;
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.04, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+  gain.connect(ctx.destination);
+
+  if (themeId === 'brutalist') {
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    osc1.type = 'triangle';
+    osc2.type = 'square';
+    osc1.frequency.setValueAtTime(150, now);
+    osc2.frequency.setValueAtTime(225, now);
+    osc1.connect(gain);
+    osc2.connect(gain);
+    osc1.start();
+    osc2.start();
+    osc1.stop(now + 0.5);
+    osc2.stop(now + 0.5);
+  } else if (themeId === 'neon') {
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(800, now);
+    osc.frequency.linearRampToValueAtTime(100, now + 0.3);
+    osc.connect(gain);
+    osc.start();
+    osc.stop(now + 0.3);
+  } else if (themeId === 'emerald') {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(1200, now);
+    osc.frequency.setValueAtTime(1600, now + 0.1);
+    osc.frequency.setValueAtTime(2000, now + 0.2);
+    osc.connect(gain);
+    osc.start();
+    osc.stop(now + 0.3);
+  } else {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(523.25, now);
+    osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.4);
+    osc.connect(gain);
+    osc.start();
+    osc.stop(now + 0.4);
+  }
+};
+
