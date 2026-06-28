@@ -13,6 +13,7 @@ const TerminalConsole = () => {
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
   const konamiIndexRef = useRef(0);
+  const commandExecutorRef = useRef(null);
 
   // Snake game states
   const [isPlayingSnake, setIsPlayingSnake] = useState(false);
@@ -68,9 +69,35 @@ const TerminalConsole = () => {
         konamiIndexRef.current = 0;
       }
     };
+    const handleToggleTerminal = (e) => {
+      setIsOpen((prev) => {
+        const next = e.detail?.open !== undefined ? e.detail.open : !prev;
+        playClick();
+        return next;
+      });
+      if (e.detail?.command && commandExecutorRef.current) {
+        commandExecutorRef.current(null, e.detail.command);
+      }
+    };
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('toggle-terminal', handleToggleTerminal);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('toggle-terminal', handleToggleTerminal);
+    };
   }, []);
+
+  useEffect(() => {
+    commandExecutorRef.current = handleCommand;
+  });
+
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      setTimeout(() => {
+        inputRef.current.focus();
+      }, 100);
+    }
+  }, [isOpen]);
 
   // Snake controls keyboard listener
   useEffect(() => {
@@ -154,14 +181,15 @@ const TerminalConsole = () => {
   const [gitBranches, setGitBranches] = useState(['main', 'dev']);
   const [gitActiveBranch, setGitActiveBranch] = useState('main');
 
-  const handleCommand = (e) => {
-    if (e.key !== 'Enter') return;
-    const cmdLower = inputVal.trim().toLowerCase();
-    const trimmedInput = inputVal.trim();
+  const handleCommand = (e, commandOverride) => {
+    if (e && e.key !== 'Enter') return;
+    const rawInput = commandOverride !== undefined ? commandOverride : inputVal;
+    const cmdLower = rawInput.trim().toLowerCase();
+    const trimmedInput = rawInput.trim();
     if (!trimmedInput) return;
 
     playClick();
-    const newHistory = [...history, { text: `(${gitActiveBranch}) $ ${inputVal}`, type: 'input' }];
+    const newHistory = [...history, { text: `(${gitActiveBranch}) $ ${rawInput}`, type: 'input' }];
     setInputVal('');
     let output;
     let logType = 'output';

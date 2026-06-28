@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import CyberArcadeGame from './CyberArcadeGame';
 
 
 const focusTechs = [
@@ -329,7 +328,7 @@ const BentoGrid = () => {
             </div>
           </motion.div>
 
-          {/* Item 5: Cyber Terminal Arcade Game (Full Width at bottom of dashboard) */}
+          {/* Item 5: Diagnostics & System Telemetry (Full Width bottom card) */}
           <motion.div
             whileHover={{ y: -4, borderColor: 'var(--accent-cyan)' }}
             className="glass-card bento-card"
@@ -340,19 +339,157 @@ const BentoGrid = () => {
               flexDirection: 'column',
               justifyContent: 'space-between',
               border: '1px solid rgba(255,255,255,0.08)',
-              minHeight: '440px'
+              minHeight: '320px',
+              background: 'linear-gradient(135deg, rgba(6, 242, 254, 0.02) 0%, rgba(3, 3, 5, 0.6) 100%)'
             }}
           >
-            <div style={{ marginBottom: '20px' }}>
-              <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>[Core Entertainment Module]</span>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginTop: '8px', color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>Interactive Cyber Arcade</h3>
-              <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '4px' }}>
-                Test your reflexes against neural networks debris. Interactive vector asteroid simulator running on local thread.
-              </p>
+            {/* Widget Title & Subtitle */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+              <div>
+                <span style={{ fontSize: '0.75rem', color: 'var(--accent-cyan)', fontWeight: '700', letterSpacing: '1px', textTransform: 'uppercase' }}>[Core Diagnostics System]</span>
+                <h3 style={{ fontSize: '1.5rem', fontWeight: '800', marginTop: '6px', color: 'var(--text-primary)', fontFamily: 'var(--font-heading)' }}>Interactive Diagnostics Telemetry</h3>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                  Execute shell instructions directly or monitor active pipeline variables.
+                </p>
+              </div>
+              {/* Pulsing online badge */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 12px', background: 'rgba(74, 246, 38, 0.06)', border: '1px solid rgba(74, 246, 38, 0.15)', borderRadius: '50px' }}>
+                <motion.span animate={{ opacity: [0.4, 1, 0.4] }} transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }} style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#4af626', display: 'inline-block', boxShadow: '0 0 10px #4af626' }}></motion.span>
+                <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#4af626', fontFamily: 'monospace' }}>SYSTEM_ONLINE</span>
+              </div>
             </div>
-            
-            <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-              <CyberArcadeGame />
+
+            {/* Content Area */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.3fr', gap: '30px', margin: '24px 0', alignItems: 'center', flexGrow: 1 }}>
+              {/* Left Column: Simulated Resource Metrics */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px', fontFamily: 'monospace' }}>
+                    <span>CPU_ALLOCATION</span>
+                    <span style={{ color: 'var(--accent-cyan)' }}>18%</span>
+                  </div>
+                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.03)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <motion.div animate={{ width: '18%' }} transition={{ duration: 1.5, ease: 'easeOut' }} style={{ height: '100%', background: 'var(--accent-cyan)', borderRadius: '3px' }}></motion.div>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px', fontFamily: 'monospace' }}>
+                    <span>MEMORY_UTILIZATION</span>
+                    <span style={{ color: 'var(--accent-blue)' }}>42%</span>
+                  </div>
+                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.03)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <motion.div animate={{ width: '42%' }} transition={{ duration: 1.5, ease: 'easeOut' }} style={{ height: '100%', background: 'var(--accent-blue)', borderRadius: '3px' }}></motion.div>
+                  </div>
+                </div>
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '6px', fontFamily: 'monospace' }}>
+                    <span>DIAGNOSTICS_LATENCY</span>
+                    <span style={{ color: '#feb47b' }}>462ms</span>
+                  </div>
+                  <div style={{ height: '6px', background: 'rgba(255,255,255,0.03)', borderRadius: '3px', overflow: 'hidden' }}>
+                    <motion.div animate={{ width: '70%' }} transition={{ duration: 1.5, ease: 'easeOut' }} style={{ height: '100%', background: '#feb47b', borderRadius: '3px' }}></motion.div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Middle Column: Shell directive execution box */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', padding: '16px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.04)', borderRadius: 'var(--radius-sm)' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: '700', color: 'var(--text-muted)', fontFamily: 'monospace' }}>DIRECTIVE_TUNNEL</span>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <input 
+                    type="text" 
+                    id="telemetry-input"
+                    placeholder="help, matrix, neofetch..." 
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const val = e.target.value;
+                        if (val.trim()) {
+                          window.dispatchEvent(new CustomEvent('toggle-terminal', { detail: { open: true, command: val } }));
+                          e.target.value = '';
+                        }
+                      }
+                    }}
+                    style={{
+                      flexGrow: 1,
+                      background: 'rgba(0,0,0,0.3)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      padding: '8px 12px',
+                      borderRadius: '4px',
+                      color: 'var(--text-primary)',
+                      fontFamily: 'monospace',
+                      fontSize: '0.8rem',
+                      outline: 'none'
+                    }}
+                  />
+                  <button 
+                    onClick={() => {
+                      const input = document.getElementById('telemetry-input');
+                      if (input && input.value.trim()) {
+                        window.dispatchEvent(new CustomEvent('toggle-terminal', { detail: { open: true, command: input.value } }));
+                        input.value = '';
+                      }
+                    }}
+                    style={{
+                      padding: '8px 14px',
+                      background: 'var(--accent-cyan)',
+                      border: 'none',
+                      borderRadius: '4px',
+                      color: '#000',
+                      fontWeight: '700',
+                      fontFamily: 'monospace',
+                      fontSize: '0.8rem',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    RUN
+                  </button>
+                </div>
+                <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Pipe direct input to visual console workspace.</span>
+              </div>
+
+              {/* Right Column: Clickable Macro Command Buttons */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'flex-end' }}>
+                {[
+                  { label: 'NEOFETCH', cmd: 'neofetch', color: 'var(--accent-cyan)' },
+                  { label: 'MATRIX', cmd: 'matrix', color: 'var(--accent-blue)' },
+                  { label: 'RETRO SNAKE', cmd: 'snake', color: '#4af626' },
+                  { label: 'PAINT OVERLAY', cmd: 'paint', color: '#c9a227' },
+                  { label: 'SYNTH SEQUENCER', cmd: 'synth', color: '#9d00ff' }
+                ].map((macro) => (
+                  <button
+                    key={macro.label}
+                    onClick={() => {
+                      window.dispatchEvent(new CustomEvent('toggle-terminal', { detail: { open: true, command: macro.cmd } }));
+                    }}
+                    style={{
+                      padding: '8px 12px',
+                      background: 'rgba(255,255,255,0.02)',
+                      border: `1px solid ${macro.color}25`,
+                      color: 'var(--text-primary)',
+                      fontFamily: 'monospace',
+                      fontSize: '0.72rem',
+                      fontWeight: '600',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = `${macro.color}10`;
+                      e.currentTarget.style.borderColor = macro.color;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'rgba(255,255,255,0.02)';
+                      e.currentTarget.style.borderColor = `${macro.color}25`;
+                    }}
+                  >
+                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: macro.color }}></span>
+                    {macro.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
